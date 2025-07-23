@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .map(
         (name) => `
       <div class="flex items-center justify-between p-2 mb-2 rounded" 
-           style="backdrop-filter: blur(4px); background-color: rgba(255, 255, 255, 0.2);">
+           ">
         <div class="flex-1">
           <div class="font-medium text-white text-sm">${name}</div>
           <div class="text-xs text-gray-300">${streaks[name].count} days</div>
