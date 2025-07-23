@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Streak Counter App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <style>
+      /* Tailwind CSS CDN */
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css");
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen py-8">
+    <div
+      id="app"
+      class="w-full max-w-[600px] mx-auto p-6"
+      style="
+        backdrop-filter: blur(4px);
+        background-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+      "
+    >
+      <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">
+        Streak Counter
+      </h1>
+
+      <!-- Add new streak -->
+      <div class="mb-6">
+        <div class="flex gap-2">
+          <input
+            type="text"
+            id="newStreakInput"
+            placeholder="Enter streak name"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+          />
+          <button
+            onclick="addStreak()"
+            class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+
+      <!-- Streak selector -->
+      <div id="streakSelector" class="mb-6 hidden">
+        <select
+          id="streakSelect"
+          onchange="selectStreak(this.value)"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+        ></select>
+      </div>
+
+      <!-- Current streak display -->
+      <div id="currentStreak" class="mb-6 hidden">
+        <div
+          class="text-center p-6 rounded-lg"
+          style="
+            backdrop-filter: blur(4px);
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+          "
+        >
+          <h2
+            id="streakName"
+            class="text-xl font-semibold mb-2 text-gray-800"
+          ></h2>
+          <div id="streakCount" class="text-4xl font-bold text-gray-700 mb-4">
+            0
+          </div>
+          <div class="flex gap-2 justify-center">
+            <button
+              id="incrementBtn"
+              onclick="incrementStreak()"
+              class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+            >
+              +1
+            </button>
+            <button
+              onclick="resetStreak()"
+              class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+            >
+              Reset
+            </button>
+            <button
+              onclick="deleteStreak()"
+              class="px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500 transition-colors"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graph -->
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold mb-3 text-gray-800">
+          Progress History
+        </h3>
+        <div
+          id="graph"
+          class="w-full rounded-lg p-4"
+          style="
+            height: 192px;
+            backdrop-filter: blur(4px);
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+          "
+        >
+          <div class="w-full h-full flex items-center justify-center">
+            <span class="text-gray-500">No data to display</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Streak list -->
+      <div id="streakList" class="hidden">
+        <h3 class="text-lg font-semibold mb-3 text-gray-800">All Streaks</h3>
+        <div id="streakItems" class="space-y-2"></div>
+      </div>
+    </div>
+
+    <script src="script-streak.js"></script>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi-Date Countdown App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="script-countDown.js" />
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold text-center mb-8">Countdown App</h1>
+
+      <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-4">Add New Countdown</h2>
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Event Name</label
+            >
+            <input
+              type="text"
+              id="eventName"
+              class="w-full p-2 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Target Date & Time</label
+            >
+            <input
+              type="datetime-local"
+              id="eventDate"
+              class="w-full p-2 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div class="flex items-end">
+            <button
+              id="addCountdown"
+              class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            >
+              Add Countdown
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="countdownsContainer"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        <!-- Countdowns will be added here -->
+      </div>
+    </div>
+
+    <script src="script-countDown.js"></script>
+  </body>
+</html>

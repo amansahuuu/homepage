@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage</title>
+    <style>
+      * {
+        font-family: "Times New Roman", Times, serif;
+      }
+      body {
+        position: relative;
+        font-family: "Playfair Display", serif;
+        font-optical-sizing: auto;
+        font-weight: 500;
+        font-style: normal;
+      }
+      #homepageNextImg {
+        background-image: url(img/pic2.jpg);
+        image-rendering: crisp-edges;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="journal-widget.css" rel="stylesheet" />
+    <link href="./output.css" rel="stylesheet" />
+    <link href="streak-widget.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="bg-[url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200')] bg-cover bg-center min-h-screen"
+  >
+    <!-- Top Navigation Bar -->
+    <div class="w-full h-30 flex items-center justify-between bg-opacity-60">
+      <!-- Left: Logo or Title -->
+      <div class="flex flex-row gap-3">
+        <div class="w-30 h-30">
+          <img src="img/pic3.png" alt="flower" class="w-[120px] h-[120px]" />
+        </div>
+        <div class="text-white text-4xl font-bold ml-1">
+          <h1 class="text-4xl">HOMEPAGE</h1>
+          <h1 class="text-[15px]" id="dateAndTime">date</h1>
+        </div>
+      </div>
+
+      <!-- Right: Quick Links -->
+      <div class="flex gap-6 text-white text-lg">
+        <!-- Background changer - tucked away in corner -->
+        <div class="xl:flex xl:flex-row hidden gap-1 wrap-">
+          <div class="z-50">
+            <input type="file" id="bgUpload" accept="image/*" class="hidden" />
+            <button
+              onclick="document.getElementById('bgUpload').click()"
+              class="p-1 m-1 bg-red-300 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+            >
+              change image
+            </button>
+          </div>
+
+          <div>
+            <button
+              onclick='window.location.href = "countdown.html"'
+              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+            >
+              Aakash
+            </button>
+          </div>
+          <div>
+            <button
+              onclick='window.location.href = "countdown.html"'
+              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+            >
+              Teams
+            </button>
+          </div>
+          <div>
+            <button
+              onclick='window.location.href = "countdown.html"'
+              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+            >
+              youtube
+            </button>
+          </div>
+          <div>
+            <button
+              onclick='window.location.href = "countdown.html"'
+              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+            >
+              reddit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--main body-->
+    <div class="grid grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-2 m-3">
+      <div class="backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem] p-1">
+        <h1 class="text-3xl font-bold text-center m-1">Countdown App</h1>
+        <button
+          onclick='window.location.href = "countdown.html"'
+          class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+        >
+          Open in App
+        </button>
+
+        <div id="countdownWidget" class="font-sans mx-auto">
+          <div id="widgetCountdowns" class="grid gap-3"></div>
+        </div>
+      </div>
+
+      <div class="backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem]">
+        <div
+          class="w-[100%]"
+          id="ww_7b1f910c265f2"
+          v="1.3"
+          loc="auto"
+          a='{"t":"horizontal","lang":"en","sl_lpl":1,"ids":[],"font":"Times","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"#FFFFFF00","cl_font":"#000000","cl_cloud":"#d4d4d4","cl_persp":"#2196F3","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'
+        >
+          <a
+            href="https://weatherwidget.org/"
+            id="ww_7b1f910c265f2_u"
+            target="_blank"
+            >HTML Weather Widget for website</a
+          >
+        </div>
+        <script
+          async
+          src="https://app3.weatherwidget.org/js/?id=ww_7b1f910c265f2"
+        ></script>
+      </div>
+      <!--to do list-->
+      <div
+        class="h-[30vh] backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem]"
+      >
+        <div id="widgetContainer" class="w-full max-w-xs p-4 rounded-xl">
+          <h1 class="text-3xl font-bold mb-3 text-center cursor-pointer">
+            Tasks
+          </h1>
+          <ul id="widgetList" class="space-y-2"></ul>
+        </div>
+        <hr />
+        <button
+          onclick='window.location.href = "toDoList.html"'
+          class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+        >
+          Open in App
+        </button>
+      </div>
+
+      <div class="h-[30vh]">
+        <div class="p-1">
+          <div
+            class="mx-auto p-4 rounded-lg"
+            style="
+              backdrop-filter: blur(4px);
+              background-color: rgba(255, 255, 255, 0.3);
+              box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            "
+          >
+            <!-- Widget Header -->
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold text-gray-800">Streak Widget</h2>
+              <button
+                onclick="openMainApp()"
+                class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+              >
+                Open App
+              </button>
+            </div>
+
+            <!-- Quick Add Streak -->
+            <div class="mb-4">
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="quickAddInput"
+                  placeholder="Add new habit"
+                  class="flex-1 px-2 py-1 text-sm text-black border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400"
+                />
+                <button
+                  onclick="quickAddStreak()"
+                  class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+
+            <!-- Current Streaks -->
+            <div id="streaksList">
+              <div id="noStreaks" class="text-center text-white text-sm py-4">
+                No habits tracked yet
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-4 pt-3 border-t border-gray-300">
+              <div class="text-xs text-gray-600 text-center">
+                Track your daily habits
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--diary-->
+      <div class=" ">
+        <div class="-md col-span-2">
+          <div class="widget-container">
+            <div class="widget-overlay"></div>
+            <div class="widget-pattern"></div>
+
+            <div class="cherry-blossom cherry-1">🌸</div>
+            <div class="cherry-blossom cherry-2">🌸</div>
+            <div class="cherry-blossom cherry-3">🌸</div>
+
+            <div class="widget-content">
+              <div class="widget-header">
+                <div class="widget-title">日記</div>
+                <div class="widget-subtitle">Daily Journal</div>
+              </div>
+
+              <a
+                href="dailyJournal.html?action=new&focus=editor"
+                class="new-entry-btn"
+              >
+                <span>✨</span>
+                <span>New Entry</span>
+              </a>
+
+              <div class="entries-container" id="entriesContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--acheivement-logger-->
+      <div class="row-span-3">
+        <div
+          id="achievement-widget"
+          class="p-4 rounded-xl bg-black/20 w-full max-w-md text-white text-sm space-y-2"
+        ></div>
+      </div>
+      <!--calender-->
+      <div class="hidden md:block md:col-span-2">
+        <iframe
+          src="https://embed.styledcalendar.com/#HVIV11yTNozpDczGcofb"
+          title="Styled Calendar"
+          class="styled-calendar-container"
+          style="width: 100%; border: none"
+          data-cy="calendar-embed-iframe"
+        ></iframe>
+        <script
+          async
+          type="module"
+          src="https://embed.styledcalendar.com/assets/parent-window.js"
+        ></script>
+      </div>
+    </div>
+
+    <script>
+      // Load saved background on page load
+      window.onload = () => {
+        const savedBg = localStorage.getItem("customBg");
+        if (savedBg) document.body.style.backgroundImage = `url('${savedBg}')`;
+      };
+
+      // Background changer with localStorage
+      function changeBg(file) {
+        if (file && file.type.startsWith("image/")) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const bgUrl = e.target.result;
+            document.body.style.backgroundImage = `url('${bgUrl}')`;
+            localStorage.setItem("customBg", bgUrl);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      // Event listener
+      document.getElementById("bgUpload").onchange = (e) =>
+        changeBg(e.target.files[0]);
+    </script>
+    <script src="script-widget-acheivement-logger.js"></script>
+    <script src="script-streak-widget.js"></script>
+    <script src="script-countDown.js"></script>
+    <script src="script-app.js"></script>
+    <script src="script-todolist-widget.js"></script>
+    <script src="script-streak.js"></script>
+    <script src="script-journal-widget.js"></script>
+    <script src="script-motivation.js"></script>
+  </body>
+</html>

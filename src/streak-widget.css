@@ -1,0 +1,242 @@
+.streak-widget { 
+    background: white; 
+    border-radius: 16px; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+    overflow: hidden; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 100%;
+}
+.streak-widget-header { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+    color: white; 
+    padding: 16px; 
+}
+.streak-widget-title { 
+    font-size: 1.2rem; 
+    font-weight: bold; 
+    margin-bottom: 4px; 
+}
+.streak-total-days { 
+    font-size: 1.5rem; 
+    font-weight: bold; 
+}
+.streak-widget-content { 
+    padding: 16px; 
+}
+.streak-tab-buttons { 
+    display: flex; 
+    background: #f8f9fa; 
+    border-radius: 8px; 
+    padding: 4px; 
+    margin-bottom: 16px; 
+}
+.streak-tab-btn { 
+    flex: 1; 
+    padding: 6px 10px; 
+    background: none; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: all 0.3s; 
+    font-weight: 500; 
+    font-size: 0.85rem;
+}
+.streak-tab-btn.active { 
+    background: white; 
+    color: #667eea; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+.streak-tab-content { 
+    display: none; 
+}
+.streak-tab-content.active { 
+    display: block; 
+}
+.streak-habit-item { 
+    background: #f8f9fa; 
+    border-radius: 10px; 
+    padding: 12px; 
+    margin-bottom: 10px; 
+}
+.streak-habit-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 8px; 
+}
+.streak-habit-name { 
+    font-weight: 600; 
+    color: #2d3748; 
+    font-size: 0.9rem;
+}
+.streak-habit-days { 
+    background: #667eea; 
+    color: white; 
+    padding: 3px 8px; 
+    border-radius: 12px; 
+    font-size: 0.75rem; 
+    font-weight: bold; 
+}
+.streak-habit-details { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.streak-last-done { 
+    font-size: 0.75rem; 
+    color: #718096; 
+}
+.streak-mark-btn { 
+    background: #48bb78; 
+    color: white; 
+    border: none; 
+    padding: 6px 12px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-size: 0.8rem;
+    font-weight: 500; 
+}
+.streak-mark-btn:hover { 
+    background: #38a169; 
+}
+.streak-mark-btn:disabled { 
+    background: #a0aec0; 
+    cursor: not-allowed; 
+}
+.streak-add-habit { 
+    width: 100%; 
+    background: #667eea; 
+    color: white; 
+    border: none; 
+    padding: 10px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: 500; 
+    margin-bottom: 16px; 
+    font-size: 0.85rem;
+}
+.streak-add-habit:hover { 
+    background: #5a67d8; 
+}
+.streak-stats-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px; 
+    margin-bottom: 16px; 
+}
+.streak-stat-card { 
+    background: #f8f9fa; 
+    padding: 12px; 
+    border-radius: 10px; 
+    text-align: center; 
+}
+.streak-stat-number { 
+    font-size: 1.2rem; 
+    font-weight: bold; 
+    color: #667eea; 
+}
+.streak-stat-label { 
+    font-size: 0.7rem; 
+    color: #718096; 
+    margin-top: 2px; 
+}
+.streak-calendar-grid { 
+    display: grid; 
+    grid-template-columns: repeat(7, 1fr); 
+    gap: 2px; 
+    font-size: 0.7rem;
+}
+.streak-calendar-day { 
+    aspect-ratio: 1; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 3px; 
+    cursor: pointer; 
+}
+.streak-calendar-day.completed { 
+    background: #48bb78; 
+    color: white; 
+}
+.streak-calendar-day.partial { 
+    background: #ed8936; 
+    color: white; 
+}
+.streak-calendar-day.missed { 
+    background: #f7fafc; 
+}
+.streak-calendar-day.today { 
+    border: 2px solid #667eea; 
+    font-weight: bold; 
+}
+.streak-modal { 
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.5); 
+}
+.streak-modal-content { 
+    background-color: #fefefe; 
+    margin: 15% auto; 
+    padding: 20px; 
+    border-radius: 12px; 
+    width: 90%; 
+    max-width: 350px; 
+}
+.streak-modal-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 16px; 
+}
+.streak-close { 
+    color: #aaa; 
+    font-size: 24px; 
+    font-weight: bold; 
+    cursor: pointer; 
+}
+.streak-close:hover { 
+    color: black; 
+}
+.streak-form-group { 
+    margin-bottom: 12px; 
+}
+.streak-form-label { 
+    display: block; 
+    margin-bottom: 6px; 
+    font-weight: 500; 
+    font-size: 0.9rem;
+}
+.streak-form-input, .streak-form-select { 
+    width: 100%; 
+    padding: 10px; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 6px; 
+    font-size: 0.85rem; 
+}
+.streak-btn-primary { 
+    background: #667eea; 
+    color: white; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: 500; 
+    font-size: 0.85rem;
+}
+.streak-btn-primary:hover { 
+    background: #5a67d8; 
+}
+.streak-delete-btn {
+    background: #e53e3e; 
+    color: white; 
+    border: none; 
+    padding: 6px; 
+    border-radius: 6px; 
+    cursor: pointer;
+    font-size: 0.7rem;
+}

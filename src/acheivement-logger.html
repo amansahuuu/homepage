@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Achievement Logger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 p-6 font-sans">
+    <div class="max-w-xl mx-auto bg-white shadow-md rounded-xl p-6">
+      <h1 class="text-2xl font-bold mb-4">🏆 Achievement Logger</h1>
+
+      <div class="flex flex-col gap-3">
+        <textarea
+          id="achievement"
+          placeholder="Write your achievement..."
+          class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+        ></textarea>
+        <button
+          onclick="addAchievement()"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-fit"
+        >
+          Add
+        </button>
+      </div>
+
+      <div class="mt-6">
+        <h2 class="text-xl font-semibold mb-2">Your Achievements</h2>
+        <ul
+          id="logList"
+          class="list-disc list-inside space-y-2 text-gray-700"
+        ></ul>
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <button
+          onclick="exportData()"
+          class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Export
+        </button>
+        <label
+          class="bg-yellow-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-yellow-600"
+        >
+          Import
+          <input
+            type="file"
+            accept=".json"
+            onchange="importData(event)"
+            class="hidden"
+          />
+        </label>
+      </div>
+    </div>
+    <script src="script-acheivement-loggger.js"></script>
+  </body>
+</html>
