@@ -33,5 +33,5 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   container.appendChild(list);
-  container.appendChild(openMainBtn);
+  //container.appendChild(openMainBtn);
 });

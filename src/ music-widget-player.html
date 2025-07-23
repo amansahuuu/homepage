@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MP3 Player Widget</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .progress-bar {
+        background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+      }
+      .widget-container {
+        width: 350px;
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        border: 1px solid #374151;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      }
+      .track-item:hover {
+        background-color: rgba(59, 130, 246, 0.1);
+      }
+      .track-item.active {
+        background-color: rgba(59, 130, 246, 0.2);
+      }
+      .playlist-container {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .playlist-container::-webkit-scrollbar {
+        width: 4px;
+      }
+      .playlist-container::-webkit-scrollbar-track {
+        background: #374151;
+      }
+      .playlist-container::-webkit-scrollbar-thumb {
+        background: #6b7280;
+        border-radius: 2px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 p-4">
+    <div class="widget-container rounded-lg text-white mx-auto">
+      <!-- Header with Upload -->
+      <div class="p-4 border-b border-gray-700">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-bold text-lg">🎵 Music Player</h3>
+          <label
+            for="fileInput"
+            class="cursor-pointer bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-md text-sm transition-colors"
+          >
+            + Add
+            <input
+              type="file"
+              id="fileInput"
+              class="hidden"
+              multiple
+              accept="audio/*"
+            />
+          </label>
+        </div>
+
+        <!-- Current Track Info -->
+        <div class="text-center">
+          <p id="currentTrack" class="font-medium text-sm truncate">
+            No track selected
+          </p>
+          <p id="currentArtist" class="text-xs text-gray-400 truncate">
+            Select a song to play
+          </p>
+        </div>
+      </div>
+
+      <!-- Player Controls -->
+      <div class="p-4">
+        <!-- Progress Bar -->
+        <div class="mb-4">
+          <div class="flex justify-between text-xs text-gray-400 mb-1">
+            <span id="currentTime">0:00</span>
+            <span id="duration">0:00</span>
+          </div>
+          <div
+            class="w-full bg-gray-700 rounded-full h-1.5 cursor-pointer"
+            id="progressContainer"
+          >
+            <div
+              class="progress-bar h-1.5 rounded-full transition-all duration-300"
+              style="width: 0%"
+              id="progressBar"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="flex items-center justify-center space-x-4">
+          <button
+            id="prevBtn"
+            class="text-gray-400 hover:text-white transition-colors"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"
+              />
+            </svg>
+          </button>
+
+          <button
+            id="playPauseBtn"
+            class="bg-blue-600 hover:bg-blue-700 rounded-full p-2 transition-colors"
+          >
+            <svg
+              id="playIcon"
+              class="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <svg
+              id="pauseIcon"
+              class="w-5 h-5 hidden"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+
+          <button
+            id="nextBtn"
+            class="text-gray-400 hover:text-white transition-colors"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z"
+              />
+            </svg>
+          </button>
+
+          <button
+            id="shuffleBtn"
+            class="text-gray-400 hover:text-white transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M5 12a1 1 0 102 0V6.414l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L5 6.414V12zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Volume Control -->
+        <div class="flex items-center justify-center mt-3 space-x-2">
+          <svg
+            class="w-4 h-4 text-gray-400"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.797L4.828 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.828l3.555-3.797A1 1 0 019.383 3.076zM12 6a1 1 0 011.414 0C14.536 7.122 15 8.534 15 10s-.464 2.878-1.586 4A1 1 0 0112 13a1 1 0 010-1.414C12.756 11.334 13 10.691 13 10s-.244-1.334-.586-1.586A1 1 0 0112 6z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <input
+            type="range"
+            id="volumeSlider"
+            min="0"
+            max="100"
+            value="50"
+            class="flex-1 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+          />
+        </div>
+      </div>
+
+      <!-- Compact Playlist -->
+      <div class="border-t border-gray-700">
+        <div class="p-3">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-gray-300">Playlist</span>
+            <button
+              id="togglePlaylist"
+              class="text-xs text-blue-400 hover:text-blue-300"
+            >
+              <span id="playlistToggleText">Show</span>
+            </button>
+          </div>
+          <div id="playlistContainer" class="playlist-container hidden">
+            <div id="playlist">
+              <div class="text-center text-gray-400 py-4">
+                <svg
+                  class="mx-auto h-8 w-8 text-gray-500 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                  />
+                </svg>
+                <p class="text-xs">No songs</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <audio id="audioPlayer" preload="metadata"></audio>
+
+    <script>
+      class MP3PlayerWidget {
+        constructor() {
+          this.audio = document.getElementById("audioPlayer");
+          this.playlist = [];
+          this.currentIndex = 0;
+          this.isPlaying = false;
+          this.isShuffled = false;
+          this.playlistVisible = false;
+
+          this.initializeElements();
+          this.bindEvents();
+        }
+
+        initializeElements() {
+          this.fileInput = document.getElementById("fileInput");
+          this.playPauseBtn = document.getElementById("playPauseBtn");
+          this.playIcon = document.getElementById("playIcon");
+          this.pauseIcon = document.getElementById("pauseIcon");
+          this.prevBtn = document.getElementById("prevBtn");
+          this.nextBtn = document.getElementById("nextBtn");
+          this.shuffleBtn = document.getElementById("shuffleBtn");
+          this.progressContainer = document.getElementById("progressContainer");
+          this.progressBar = document.getElementById("progressBar");
+          this.currentTime = document.getElementById("currentTime");
+          this.duration = document.getElementById("duration");
+          this.volumeSlider = document.getElementById("volumeSlider");
+          this.currentTrack = document.getElementById("currentTrack");
+          this.currentArtist = document.getElementById("currentArtist");
+          this.playlistContainer = document.getElementById("playlistContainer");
+          this.playlist = document.getElementById("playlist");
+          this.togglePlaylist = document.getElementById("togglePlaylist");
+          this.playlistToggleText =
+            document.getElementById("playlistToggleText");
+        }
+
+        bindEvents() {
+          this.fileInput.addEventListener("change", (e) =>
+            this.handleFileUpload(e)
+          );
+          this.playPauseBtn.addEventListener("click", () =>
+            this.togglePlayPause()
+          );
+          this.prevBtn.addEventListener("click", () => this.previousTrack());
+          this.nextBtn.addEventListener("click", () => this.nextTrack());
+          this.shuffleBtn.addEventListener("click", () => this.toggleShuffle());
+          this.progressContainer.addEventListener("click", (e) => this.seek(e));
+          this.volumeSlider.addEventListener("input", (e) =>
+            this.setVolume(e.target.value)
+          );
+          this.togglePlaylist.addEventListener("click", () =>
+            this.togglePlaylistVisibility()
+          );
+
+          this.audio.addEventListener("loadedmetadata", () =>
+            this.updateDuration()
+          );
+          this.audio.addEventListener("timeupdate", () =>
+            this.updateProgress()
+          );
+          this.audio.addEventListener("ended", () => this.handleTrackEnd());
+        }
+
+        handleFileUpload(event) {
+          const files = Array.from(event.target.files);
+          files.forEach((file) => {
+            const url = URL.createObjectURL(file);
+            const track = {
+              name: file.name.replace(/\.[^/.]+$/, ""),
+              file: file,
+              url: url,
+              duration: 0,
+            };
+            this.playlist.push(track);
+          });
+          this.renderPlaylist();
+          if (this.playlist.length === 1) {
+            this.loadTrack(0);
+          }
+        }
+
+        togglePlaylistVisibility() {
+          this.playlistVisible = !this.playlistVisible;
+          if (this.playlistVisible) {
+            this.playlistContainer.classList.remove("hidden");
+            this.playlistToggleText.textContent = "Hide";
+          } else {
+            this.playlistContainer.classList.add("hidden");
+            this.playlistToggleText.textContent = "Show";
+          }
+        }
+
+        renderPlaylist() {
+          if (this.playlist.length === 0) {
+            this.playlist.innerHTML = `
+                        <div class="text-center text-gray-400 py-4">
+                            <svg class="mx-auto h-8 w-8 text-gray-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                            </svg>
+                            <p class="text-xs">No songs</p>
+                        </div>
+                    `;
+            return;
+          }
+
+          this.playlist.innerHTML = this.playlist
+            .map(
+              (track, index) => `
+                    <div class="track-item flex items-center justify-between p-2 rounded cursor-pointer transition-colors text-sm ${
+                      index === this.currentIndex ? "active" : ""
+                    }" 
+                         onclick="widget.loadTrack(${index})">
+                        <div class="flex items-center space-x-2 flex-1 min-w-0">
+                            <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center flex-shrink-0">
+                                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="font-medium text-white text-xs truncate">${
+                                  track.name
+                                }</p>
+                            </div>
+                        </div>
+                        <button onclick="event.stopPropagation(); widget.removeTrack(${index})" 
+                                class="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                `
+            )
+            .join("");
+        }
+
+        loadTrack(index) {
+          if (index < 0 || index >= this.playlist.length) return;
+
+          this.currentIndex = index;
+          const track = this.playlist[index];
+          this.audio.src = track.url;
+          this.currentTrack.textContent = track.name;
+          this.currentArtist.textContent = "Audio File";
+          this.renderPlaylist();
+        }
+
+        togglePlayPause() {
+          if (this.playlist.length === 0) return;
+
+          if (this.isPlaying) {
+            this.pause();
+          } else {
+            this.play();
+          }
+        }
+
+        play() {
+          this.audio.play();
+          this.isPlaying = true;
+          this.playIcon.classList.add("hidden");
+          this.pauseIcon.classList.remove("hidden");
+        }
+
+        pause() {
+          this.audio.pause();
+          this.isPlaying = false;
+          this.playIcon.classList.remove("hidden");
+          this.pauseIcon.classList.add("hidden");
+        }
+
+        previousTrack() {
+          if (this.playlist.length === 0) return;
+          let newIndex = this.currentIndex - 1;
+          if (newIndex < 0) newIndex = this.playlist.length - 1;
+          this.loadTrack(newIndex);
+          if (this.isPlaying) this.play();
+        }
+
+        nextTrack() {
+          if (this.playlist.length === 0) return;
+          let newIndex = this.currentIndex + 1;
+          if (newIndex >= this.playlist.length) newIndex = 0;
+          this.loadTrack(newIndex);
+          if (this.isPlaying) this.play();
+        }
+
+        toggleShuffle() {
+          this.isShuffled = !this.isShuffled;
+          this.shuffleBtn.style.color = this.isShuffled ? "#3b82f6" : "";
+        }
+
+        seek(event) {
+          const rect = this.progressContainer.getBoundingClientRect();
+          const percent = (event.clientX - rect.left) / rect.width;
+          this.audio.currentTime = percent * this.audio.duration;
+        }
+
+        setVolume(value) {
+          this.audio.volume = value / 100;
+        }
+
+        updateDuration() {
+          this.duration.textContent = this.formatTime(this.audio.duration);
+        }
+
+        updateProgress() {
+          const percent = (this.audio.currentTime / this.audio.duration) * 100;
+          this.progressBar.style.width = percent + "%";
+          this.currentTime.textContent = this.formatTime(
+            this.audio.currentTime
+          );
+        }
+
+        handleTrackEnd() {
+          if (this.currentIndex < this.playlist.length - 1) {
+            this.nextTrack();
+          } else {
+            this.pause();
+          }
+        }
+
+        removeTrack(index) {
+          URL.revokeObjectURL(this.playlist[index].url);
+          this.playlist.splice(index, 1);
+
+          if (index === this.currentIndex) {
+            if (this.playlist.length === 0) {
+              this.audio.src = "";
+              this.currentTrack.textContent = "No track selected";
+              this.currentArtist.textContent = "Select a song to play";
+              this.pause();
+            } else {
+              const newIndex = Math.min(
+                this.currentIndex,
+                this.playlist.length - 1
+              );
+              this.loadTrack(newIndex);
+            }
+          } else if (index < this.currentIndex) {
+            this.currentIndex--;
+          }
+
+          this.renderPlaylist();
+        }
+
+        formatTime(seconds) {
+          if (isNaN(seconds)) return "0:00";
+          const mins = Math.floor(seconds / 60);
+          const secs = Math.floor(seconds % 60);
+          return `${mins}:${secs.toString().padStart(2, "0")}`;
+        }
+      }
+
+      const widget = new MP3PlayerWidget();
+    </script>
+  </body>
+</html>
