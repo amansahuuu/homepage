@@ -5,20 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>To-Do App</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            subtle: '#f5f5f5',
+            muted: '#e0e0e0',
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<div class = "bg-amber-300">
-    <a  href = "index.html" class="text-amber-100">homepage</a>
-</div>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
-    <h1 class="text-3xl font-bold mb-4 text-center text-indigo-600">My To-Do List</h1>
+<body class="bg-subtle min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-white rounded-xl shadow-sm p-6 border border-muted">
+    <!-- Navigation -->
+    <div class="mb-6">
+      <a href="index.html" class="text-sm text-gray-500 hover:text-gray-700">← Back to homepage</a>
+    </div>
+    
+    <!-- Header -->
+    <h1 class="text-2xl font-medium mb-6 text-gray-800">Tasks</h1>
     
     <!-- Input -->
-    <div class="flex mb-4">
-      <input id="todoInput" type="text" placeholder="Add a task..." 
-             class="flex-grow px-4 py-2 border rounded-l-lg focus:outline-none focus:ring focus:border-blue-300" />
+    <div class="flex mb-6">
+      <input id="todoInput" type="text" placeholder="What needs to be done?" 
+             class="flex-grow px-4 py-2 border border-muted rounded-l-md focus:outline-none focus:border-gray-400 text-gray-700 placeholder-gray-400" />
       <button id="addBtn" 
-              class="bg-indigo-500 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-600">Add</button>
+              class="bg-gray-800 text-white px-4 py-2 rounded-r-md hover:bg-gray-700 transition-colors text-sm font-medium">Add</button>
     </div>
 
     <!-- Task List -->
