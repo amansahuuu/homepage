@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shared Thoughts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background-image: url("https://source.unsplash.com/1600x900/?sky,blur");
+        background-size: cover;
+        background-position: center;
+      }
+      .selected-entry {
+        background-color: #3b82f6 !important;
+        color: white !important;
+      }
+      .entry-button {
+        transition: all 0.2s ease;
+      }
+      .entry-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      .fade-in {
+        animation: fadeIn 0.3s ease-in;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .no-media-text {
+        color: #6b7280;
+        font-style: italic;
+        text-align: center;
+        padding: 20px;
+        background-color: #f9fafb;
+        border-radius: 8px;
+        border: 2px dashed #d1d5db;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex items-center justify-center">
+    <div
+      class="bg-white/50 rounded-xl shadow-lg w-full h-[100vh] flex flex-col"
+    >
+      <!-- Header -->
+      <div
+        class="text-3xl font-bold text-gray-800 p-4 border-b flex justify-between items-center"
+      >
+        <span>Shared thoughts</span>
+        <div class="text-sm font-normal text-gray-600">
+          <span id="totalEntries">0</span> entries
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex flex-col lg:flex-row flex-1 space-y-2 overflow-hidden">
+        <!-- Left: Previous Entries -->
+        <div class="w-full lg:w-3/12 border-r overflow-y-auto p-2">
+          <div class="flex justify-between items-center mb-2">
+            <h2 class="font-semibold text-gray-700">Previous Entries</h2>
+            <button
+              onclick="sortEntries()"
+              class="text-xs bg-blue-100 hover:bg-blue-200 px-2 py-1 rounded text-blue-700"
+              title="Sort by date"
+            >
+              Sort
+            </button>
+          </div>
+          <ul id="entryList" class="space-y-2">
+            <!-- Entries will be auto-generated here -->
+          </ul>
+          <div
+            id="noEntriesMessage"
+            class="text-center text-gray-500 text-sm mt-4 hidden"
+          >
+            No entries yet
+          </div>
+        </div>
+
+        <!-- Middle: Text Section -->
+        <div class="w-full lg:w-6/12 p-4 overflow-y-auto border-r">
+          <div class="mb-4">
+            <p id="entryDate" class="text-gray-600 text-sm mb-2">
+              Select an entry to view...
+            </p>
+            <div class="text-xs text-gray-500" id="entryStats">
+              <!-- Entry statistics will appear here -->
+            </div>
+          </div>
+          <div
+            id="entryText"
+            class="text-gray-900 text-base whitespace-pre-line leading-relaxed"
+          >
+            <!-- Entry text will go here -->
+          </div>
+          <div
+            id="noSelectionMessage"
+            class="text-center text-gray-400 text-lg mt-8"
+          >
+            👆 Choose an entry from the left to read
+          </div>
+        </div>
+
+        <!-- Right: Media Section -->
+        <div class="w-full lg:w-3/12 p-4 overflow-y-auto">
+          <h2 class="text-gray-700 font-semibold mb-2">
+            Media for selected entry
+          </h2>
+          <div id="entryMedia" class="space-y-4">
+            <!-- Media will go here -->
+          </div>
+          <div id="noMediaMessage" class="no-media-text hidden">
+            📷 No media were added, so no media to show here
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Data and Logic -->
+    <script>
+      // Sample entries - just add your entries here and everything else is automatic
+      const entries = [
+        {
+          date: "2/2/2025",
+          text: "This is the entry for 2nd Feb 2025.\nIt was a bright day with soft clouds overhead.\n\nI spent most of my time reading and reflecting on life. The weather was perfect for a long walk, and I couldn't help but feel grateful for these peaceful moments.",
+          media: [
+            '<img src="https://source.unsplash.com/600x300/?sky" class="rounded shadow w-full" alt="Sky image" />',
+            '<audio controls class="w-full"><source src="your-audio.mp3" type="audio/mpeg" />Your browser does not support audio.</audio>',
+          ],
+        },
+        {
+          date: "15/6/2025",
+          text: "A rainy evening.\nFelt calm and nostalgic.\n\nThere's something magical about rain that makes you want to curl up with a good book and just listen to the rhythm of droplets on the window.",
+          media: [
+            '<video controls class="w-full rounded shadow"><source src="your-video.mp4" type="video/mp4" />Your browser does not support video.</video>',
+          ],
+        },
+        {
+          date: "10/7/2025",
+          text: "Walked through the woods.\nEverything smelled like rain and trees.\n\nNature has this incredible way of putting things into perspective. Every step on the forest path felt like a meditation.",
+          media: [
+            '<img src="https://source.unsplash.com/600x300/?forest" class="rounded shadow w-full" alt="Forest image" />',
+            '<img src="https://source.unsplash.com/600x300/?trees" class="rounded shadow w-full" alt="Trees image" />',
+          ],
+        },
+        {
+          date: "25/7/2025",
+          text: "Had a wonderful conversation with an old friend today.\nSometimes the best therapy is just talking to someone who truly understands you.\n\nWe laughed, we reminisced, and we planned future adventures. Friendship is truly one of life's greatest gifts.",
+          media: [], // No media for this entry
+        },
+        {
+          date: "5/8/2025",
+          text: "Started learning a new skill today - guitar!\nMy fingers hurt but my heart is full.\n\nIt's never too late to pick up something new. The first few chords were terrible, but I can already imagine myself playing beautiful melodies.",
+          media: [
+            '<img src="https://source.unsplash.com/600x300/?guitar" class="rounded shadow w-full" alt="Guitar image" />',
+          ],
+        },
+      ];
+
+      let currentSelectedIndex = -1;
+      let sortedAscending = true;
+
+      // Auto-generate entry list from the entries array
+      function generateEntryList() {
+        const entryList = document.getElementById("entryList");
+        const totalEntries = document.getElementById("totalEntries");
+        const noEntriesMessage = document.getElementById("noEntriesMessage");
+
+        entryList.innerHTML = "";
+        totalEntries.textContent = entries.length;
+
+        if (entries.length === 0) {
+          noEntriesMessage.classList.remove("hidden");
+          return;
+        } else {
+          noEntriesMessage.classList.add("hidden");
+        }
+
+        entries.forEach((entry, index) => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <button
+              onclick="loadEntry(${index})"
+              class="entry-button w-full text-left p-2 bg-white rounded hover:bg-gray-100 shadow"
+              data-index="${index}"
+            >
+              <div class="font-medium">${entry.date}</div>
+              <div class="text-xs text-gray-500">${getPreview(entry.text)}</div>
+              <div class="text-xs text-blue-600 mt-1">
+                ${
+                  entry.media.length > 0
+                    ? `📷 ${entry.media.length} media`
+                    : "📝 Text only"
+                }
+              </div>
+            </button>
+          `;
+          entryList.appendChild(li);
+        });
+      }
+
+      // Get text preview for entry button
+      function getPreview(text) {
+        const firstLine = text.split("\n")[0];
+        return firstLine.length > 30
+          ? firstLine.substring(0, 30) + "..."
+          : firstLine;
+      }
+
+      // Parse date for sorting
+      function parseDate(dateString) {
+        const parts = dateString.split("/");
+        return new Date(parts[2], parts[1] - 1, parts[0]); // year, month-1, day
+      }
+
+      // Sort entries by date
+      function sortEntries() {
+        entries.sort((a, b) => {
+          const dateA = parseDate(a.date);
+          const dateB = parseDate(b.date);
+          return sortedAscending ? dateA - dateB : dateB - dateA;
+        });
+        sortedAscending = !sortedAscending;
+        generateEntryList();
+
+        // Reselect current entry if it was selected
+        if (currentSelectedIndex >= 0) {
+          updateSelectedEntry(currentSelectedIndex);
+        }
+      }
+
+      // Update selected entry styling
+      function updateSelectedEntry(index) {
+        // Remove previous selection
+        document.querySelectorAll(".entry-button").forEach((btn) => {
+          btn.classList.remove("selected-entry");
+        });
+
+        // Add selection to current entry
+        const selectedButton = document.querySelector(
+          `[data-index="${index}"]`
+        );
+        if (selectedButton) {
+          selectedButton.classList.add("selected-entry");
+        }
+
+        currentSelectedIndex = index;
+      }
+
+      // Get word count
+      function getWordCount(text) {
+        return text.trim().split(/\s+/).length;
+      }
+
+      // Get reading time estimate
+      function getReadingTime(text) {
+        const wordsPerMinute = 200;
+        const words = getWordCount(text);
+        const minutes = Math.ceil(words / wordsPerMinute);
+        return minutes;
+      }
+
+      // Load and display entry
+      function loadEntry(index) {
+        const entry = entries[index];
+        const entryDate = document.getElementById("entryDate");
+        const entryText = document.getElementById("entryText");
+        const entryMedia = document.getElementById("entryMedia");
+        const entryStats = document.getElementById("entryStats");
+        const noSelectionMessage =
+          document.getElementById("noSelectionMessage");
+        const noMediaMessage = document.getElementById("noMediaMessage");
+
+        // Hide no selection message
+        noSelectionMessage.style.display = "none";
+
+        // Update date and stats
+        entryDate.textContent = `Shared on ${entry.date}`;
+        const wordCount = getWordCount(entry.text);
+        const readingTime = getReadingTime(entry.text);
+        entryStats.innerHTML = `
+          ${wordCount} words • ${readingTime} min read • 
+          ${entry.media.length} media item${entry.media.length !== 1 ? "s" : ""}
+        `;
+
+        // Update text with fade-in effect
+        entryText.classList.remove("fade-in");
+        setTimeout(() => {
+          entryText.textContent = entry.text;
+          entryText.classList.add("fade-in");
+        }, 50);
+
+        // Update media
+        if (entry.media && entry.media.length > 0) {
+          entryMedia.innerHTML = entry.media.join("");
+          entryMedia.classList.remove("hidden");
+          noMediaMessage.classList.add("hidden");
+        } else {
+          entryMedia.innerHTML = "";
+          entryMedia.classList.add("hidden");
+          noMediaMessage.classList.remove("hidden");
+        }
+
+        // Update selected entry styling
+        updateSelectedEntry(index);
+
+        // Scroll media section to top
+        document.querySelector(".w-full.lg\\:w-4\\/12").scrollTop = 0;
+      }
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (entries.length === 0) return;
+
+        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+          e.preventDefault();
+
+          if (currentSelectedIndex === -1) {
+            loadEntry(0);
+            return;
+          }
+
+          let newIndex = currentSelectedIndex;
+          if (e.key === "ArrowUp" && newIndex > 0) {
+            newIndex--;
+          } else if (e.key === "ArrowDown" && newIndex < entries.length - 1) {
+            newIndex++;
+          }
+
+          if (newIndex !== currentSelectedIndex) {
+            loadEntry(newIndex);
+          }
+        }
+      });
+
+      // Auto-load first entry on page load
+      function initializePage() {
+        generateEntryList();
+
+        if (entries.length > 0) {
+          loadEntry(0);
+        } else {
+          // Show empty state
+          document.getElementById("noSelectionMessage").textContent =
+            "No entries available";
+          document.getElementById("noMediaMessage").classList.remove("hidden");
+        }
+      }
+
+      // Initialize when page loads
+      document.addEventListener("DOMContentLoaded", initializePage);
+
+      // Add some utility functions for future use
+      function addNewEntry(date, text, media = []) {
+        entries.unshift({ date, text, media });
+        generateEntryList();
+        loadEntry(0); // Auto-select the new entry
+      }
+
+      function deleteEntry(index) {
+        if (confirm("Are you sure you want to delete this entry?")) {
+          entries.splice(index, 1);
+          generateEntryList();
+          if (entries.length > 0) {
+            loadEntry(Math.min(index, entries.length - 1));
+          } else {
+            // Show empty state
+            document.getElementById("entryText").textContent = "";
+            document.getElementById("entryMedia").innerHTML = "";
+            document.getElementById("noSelectionMessage").style.display =
+              "block";
+            document
+              .getElementById("noMediaMessage")
+              .classList.remove("hidden");
+          }
+        }
+      }
+
+      // Search functionality
+      function searchEntries(query) {
+        const filteredEntries = entries.filter(
+          (entry) =>
+            entry.text.toLowerCase().includes(query.toLowerCase()) ||
+            entry.date.includes(query)
+        );
+
+        // You can expand this to show filtered results
+        console.log("Search results:", filteredEntries);
+      }
+    </script>
+  </body>
+</html>

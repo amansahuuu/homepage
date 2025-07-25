@@ -13,8 +13,10 @@
     <style>
       * {
       }
+
       body {
         position: relative;
+
         font-optical-sizing: auto;
         font-weight: 500;
         font-style: normal;
@@ -23,22 +25,9 @@
         background-image: url(img/pic2.jpg);
         image-rendering: crisp-edges;
       }
-      .color-transition {
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-      }
-      button,
-      a {
-        backdrop-filter: blur(4px);
-        background-color: rgba(255, 255, 255, 0.3);
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        padding: 1px;
-        border-radius: 3px;
-        display: inline-block;
-        width: 150px; /* Set to your desired width */
-        text-align: center;
-      }
     </style>
     <link rel="stylesheet" href="music-player.css" />
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <link href="journal-widget.css" rel="stylesheet" />
@@ -58,7 +47,6 @@
     />
   </head>
   <body
-    id="bodyElement"
     class="bg-[url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200')] bg-cover bg-center min-h-screen"
   >
     <!-- Top Navigation Bar -->
@@ -77,6 +65,7 @@
           <h1 class="text-[15px]" id="dateAndTime">date</h1>
         </div>
       </div>
+
       <!-- Right: Quick Links -->
       <div class="flex flex-col gap-1">
         <div class="flex gap-6 text-lg m-2">
@@ -90,45 +79,41 @@
                 class="hidden"
               />
               <button
-                id="changeBgBtn"
                 onclick="document.getElementById('bgUpload').click()"
-                class="p-1 m-1 bg-red-300 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+                class="p-1 m-1 bg-red-300 text-white text-sm rounded hover:bg-gray-700 transition-colors"
               >
                 change image
               </button>
             </div>
+
             <div>
               <button
-                id="aakashBtn"
                 onclick='window.location.href = "https://www.aakash.ac.in/lms/login/","_blank"'
-                class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+                class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
               >
                 Aakash
               </button>
             </div>
             <div>
               <button
-                id="teamsBtn"
                 onclick='window.location.href = "https://teams.microsoft.com/v2/","_blank"'
-                class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+                class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
               >
                 Teams
               </button>
             </div>
             <div>
               <button
-                id="youtubeBtn"
                 onclick='window.location.href = "http://thinktube.xyz/", "_blank"'
-                class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+                class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
               >
                 youtube
               </button>
             </div>
             <div>
               <button
-                id="accessibilityBtn"
                 onclick="openFontSettings()"
-                class="p-1 m-1 bg-green-500 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+                class="p-1 m-1 bg-green-500 text-white text-sm rounded hover:bg-gray-700 transition-colors"
               >
                 accessibility
               </button>
@@ -137,29 +122,25 @@
         </div>
       </div>
     </div>
+
     <!--main body-->
+
     <div class="grid grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-2 m-3">
-      <div
-        id="countdownWidget"
-        class="backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem] p-1 color-transition"
-      >
+      <div class="backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem] p-1">
         <h1 class="text-3xl font-bold text-center m-1">Countdown App</h1>
         <button
-          id="countdownOpenBtn"
           onclick='window.location.href = "countdown.html"'
-          class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+          class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
         >
           Open in App
         </button>
-        <div id="countdownWidgetInner" class="font-sans mx-auto">
+
+        <div id="countdownWidget" class="font-sans mx-auto">
           <div id="widgetCountdowns" class="grid gap-3"></div>
         </div>
       </div>
       <!--weather widget-->
-      <div
-        id="weatherWidget"
-        class="backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem] color-transition"
-      >
+      <div class="backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem]">
         <div
           class="w-[100%]"
           id="ww_7b1f910c265f2"
@@ -181,8 +162,7 @@
       </div>
       <!--to do list-->
       <div
-        id="todoWidget"
-        class="h-[30vh] backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem] color-transition"
+        class="h-[30vh] backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem]"
       >
         <div id="widgetContainer" class="w-full max-w-xs p-4 rounded-xl">
           <h1 class="text-3xl font-bold mb-3 text-center cursor-pointer">
@@ -192,19 +172,17 @@
         </div>
         <hr />
         <button
-          id="todoOpenBtn"
           onclick='window.location.href = "toDoList.html"'
-          class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+          class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
         >
           Open in App
         </button>
       </div>
-      <!--streak widget-->
+      <!--weather widget-->
       <div class="">
         <div class="p-1">
           <div
-            id="streakWidget"
-            class="mx-auto p-4 rounded-lg color-transition"
+            class="mx-auto p-4 rounded-lg"
             style="
               backdrop-filter: blur(4px);
               background-color: rgba(255, 255, 255, 0.3);
@@ -215,13 +193,13 @@
             <div class="flex justify-between items-center mb-4">
               <h2 class="text-lg font-semibold text-gray-800">Streak Widget</h2>
               <button
-                id="streakOpenBtn"
                 onclick="openMainApp()"
-                class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+                class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
               >
                 Open App
               </button>
             </div>
+
             <!-- Quick Add Streak -->
             <div class="">
               <div class="flex gap-2">
@@ -232,20 +210,21 @@
                   class="flex-1 px-2 py-1 text-sm text-black border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400"
                 />
                 <button
-                  id="streakAddBtn"
                   onclick="quickAddStreak()"
-                  class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+                  class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
                 >
                   Add
                 </button>
               </div>
             </div>
+
             <!-- Current Streaks -->
             <div id="streaksList">
               <div id="noStreaks" class="text-center text-white text-sm py-4">
                 No habits tracked yet
               </div>
             </div>
+
             <!-- Footer -->
             <div class="mt-4 pt-3 border-t border-gray-300">
               <div class="text-xs text-gray-600 text-center">
@@ -256,45 +235,47 @@
         </div>
       </div>
       <!--diary-->
-      <div id="journalWidget" class="color-transition">
+      <div class="">
         <div class="-md col-span-2">
           <div class="widget-container">
             <div class="widget-overlay"></div>
             <div class="widget-pattern"></div>
+
             <div class="cherry-blossom cherry-1">🌸</div>
             <div class="cherry-blossom cherry-2">🌸</div>
             <div class="cherry-blossom cherry-3">🌸</div>
             <div class="cherry-blossom cherry-4">🌸</div>
             <div class="cherry-blossom cherry-5">🌸</div>
+
             <div class="widget-content">
               <div class="widget-header">
                 <div class="widget-title">日記</div>
                 <div class="widget-subtitle">Daily Journal</div>
               </div>
+
               <a
                 href="dailyJournal.html?action=new&focus=editor"
                 class="new-entry-btn"
-                id="journalNewBtn"
               >
                 <span>✨</span>
                 <span>New Entry</span>
               </a>
+
               <div class="entries-container" id="entriesContainer"></div>
             </div>
           </div>
         </div>
       </div>
-      <!--achievement-logger-->
+
+      <!--acheivement-logger-->
       <div
-        id="achievementWidget"
-        class="row-span-3 backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem] p-1 color-transition"
+        class="row-span-3 backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem] p-1"
       >
         <div class="flex flex-row justify-around">
-          <h2 class="text-2xl text-center font-bold">Achievement-logger</h2>
+          <h2 class="text-2xl text-center font-bold">Acheivement-logger</h2>
           <button
-            id="achievementOpenBtn"
             onclick='window.location.href = "acheivement-logger.html"'
-            class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+            class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
           >
             open Main app
           </button>
@@ -304,7 +285,7 @@
           class="p-4 rounded-xl bg-black/20 w-full max-w-md text-white text-sm space-y-2"
         ></div>
       </div>
-      <!--calendar-->
+      <!--calender-->
       <div class="hidden md:block md:col-span-2">
         <iframe
           src="https://embed.styledcalendar.com/#HVIV11yTNozpDczGcofb"
@@ -319,61 +300,57 @@
           src="https://embed.styledcalendar.com/assets/parent-window.js"
         ></script>
       </div>
-      <!--mobile actions-->
+      <!--music player-->
+
+      <!--end -->
       <div
-        id="mobileActionsWidget"
-        class="xl:hidden block backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem] p-1 color-transition"
+        class="xl:hidden block backdrop-blur-sm bg-white/30 shadow-sm rounded-[0.5rem] p-1"
       >
         <h1 class="text-2xl text-center">Important actions</h1>
+
         <!--apps-->
         <div class="grid grid-cols-3 gap-1 text-white text-lg">
           <div class="z-50">
-            <input
-              type="file"
-              id="bgUploadMobile"
-              accept="image/*"
-              class="hidden"
-            />
+            <input type="file" id="bgUpload" accept="image/*" class="hidden" />
             <button
-              id="bgUploadMobileBtn"
-              onclick="document.getElementById('bgUploadMobile').click()"
-              class="p-1 m-1 bg-red-300 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+              onclick="document.getElementById('bgUpload').click()"
+              class="p-1 m-1 bg-red-300 text-white text-sm rounded hover:bg-gray-700 transition-colors"
             >
               background
             </button>
           </div>
+
           <div>
             <button
-              id="aakashMobileBtn"
               onclick='window.open("https://www.aakash.ac.in/lms/login/", "_blank")'
-              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
             >
               Aakash
             </button>
           </div>
+
           <div>
             <button
-              id="teamsMobileBtn"
               onclick='window.open("https://teams.microsoft.com/v2/", "_blank")'
-              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
             >
               Teams
             </button>
           </div>
+
           <div>
             <button
-              id="youtubeMobileBtn"
               onclick='window.open("http://thinktube.xyz/", "_blank")'
-              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+              class="p-1 m-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
             >
               YouTube
             </button>
           </div>
+
           <div>
             <button
-              id="accessibilityMobileBtn"
               onclick="openFontSettings()"
-              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors"
             >
               Accessibility
             </button>
@@ -381,9 +358,8 @@
           <!--countdown app-->
           <div>
             <button
-              id="countdownMobileBtn"
               onclick='window.location.href = "countdown.html"'
-              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors"
             >
               Countdown app
             </button>
@@ -391,27 +367,24 @@
           <!--tasks app-->
           <div>
             <button
-              id="todoMobileBtn"
               onclick='window.location.href = "toDoList.html"'
-              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors"
             >
               To-do App
             </button>
           </div>
           <div>
             <button
-              id="achievementMobileBtn"
               onclick='window.location.href = "acheivement-logger.html"'
-              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors"
             >
-              Achievement-logger
+              Acheivement-logger
             </button>
           </div>
           <div>
             <button
-              id="journalMobileBtn"
-              onclick='window.location.href = "dailyJournal.html"'
-              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors color-transition"
+              onclick='window.location,href = "dailyJournal.html"'
+              class="p-1 m-1 bg-white text-black text-sm rounded hover:bg-gray-700 transition-colors"
             >
               journal
             </button>
@@ -419,162 +392,8 @@
         </div>
       </div>
     </div>
-
-    <!-- Improved Footer -->
-    <footer
-      id="footerElement"
-      class="mt-8 bg-white/20 backdrop-blur-sm border-t border-white/30 color-transition"
-    >
-      <div class="max-w-6xl mx-auto px-6 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <!-- Brand Section -->
-          <div class="col-span-1 md:col-span-2">
-            <h3 class="text-xl font-bold mb-3 text-white">
-              Personal Dashboard
-            </h3>
-            <p class="text-white/80 mb-4 text-sm leading-relaxed">
-              Your centralized hub for productivity, tracking habits, managing
-              tasks, and staying organized. Customize your experience with
-              dynamic themes and accessibility features.
-            </p>
-            <div class="flex space-x-3">
-              <button
-                id="footerBtn1"
-                onclick="window.location.href='https://www.instagram.com/asipx_xq';"
-                class="bg-blue-500 rounded-full flex flex-row items-center justify-center text-white text-xs hover:bg-blue-600 transition-colors"
-              >
-                insta
-              </button>
-
-              <button
-                id="footerBtn2"
-                class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-green-600 transition-colors color-transition"
-                onclick="window.location.href='journey.html';"
-              >
-                my journey
-              </button>
-              <button
-                id="footerBtn3"
-                class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-purple-600 transition-colors color-transition"
-                onclick="window.location.href='mailto:sahuonwork@gmail.com';"
-              >
-                Email me
-              </button>
-              <button
-                id="footerBtn4"
-                class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-green-600 transition-colors color-transition"
-                onclick="window.location.href='daily-text.html';"
-              >
-                Daily text
-              </button>
-            </div>
-          </div>
-
-          <!-- Quick Links -->
-          <div>
-            <h4 class="text-lg font-semibold mb-3 text-white">Quick Access</h4>
-            <ul class="space-y-2 text-sm">
-              <li>
-                <a
-                  href="countdown.html"
-                  class="text-white/80 hover:text-white transition-colors"
-                  >Countdown Timer</a
-                >
-              </li>
-              <li>
-                <a
-                  href="toDoList.html"
-                  class="text-white/80 hover:text-white transition-colors"
-                  >Task Manager</a
-                >
-              </li>
-              <li>
-                <a
-                  href="dailyJournal.html"
-                  class="text-white/80 hover:text-white transition-colors"
-                  >Daily Journal</a
-                >
-              </li>
-              <li>
-                <a
-                  href="acheivement-logger.html"
-                  class="text-white/80 hover:text-white transition-colors"
-                  >Achievements</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <!-- External Links -->
-          <div>
-            <h4 class="text-lg font-semibold mb-3 text-white">
-              External Resources
-            </h4>
-            <ul class="space-y-2 text-sm">
-              <li>
-                <a
-                  href="https://www.aakash.ac.in/lms/login/"
-                  target="_blank"
-                  class="text-white/80 hover:text-white transition-colors"
-                  >Aakash LMS</a
-                >
-              </li>
-              <li>
-                <a
-                  href="https://teams.microsoft.com/v2/"
-                  target="_blank"
-                  class="text-white/80 hover:text-white transition-colors"
-                  >Microsoft Teams</a
-                >
-              </li>
-              <li>
-                <a
-                  href="http://thinktube.xyz/"
-                  target="_blank"
-                  class="text-white/80 hover:text-white transition-colors"
-                  >ThinkTube</a
-                >
-              </li>
-              <li>
-                <button
-                  onclick="openFontSettings()"
-                  class="text-white/80 hover:text-white transition-colors text-left"
-                >
-                  Accessibility Settings
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Bottom Bar -->
-        <div
-          class="mt-8 pt-6 border-t border-white/20 flex flex-col md:flex-row justify-between items-center"
-        >
-          <div class="text-white/60 text-xs mb-2 md:mb-0">
-            © 2024 Personal Dashboard. Designed for productivity and
-            personalization.
-          </div>
-          <div class="text-white/60 text-xs mb-2 md:mb-0">
-            More than 90% of this website, it's apps and other features are made
-            by AI models like ChatGPT, DeepSeek and Claude AI.
-          </div>
-          <div class="flex items-center space-x-4 text-xs text-white/60">
-            <span id="currentDateTime" class="font-mono"></span>
-            <button
-              id="themeIndicator"
-              class="px-2 py-1 bg-white/10 rounded text-white/80 hover:bg-white/20 transition-colors"
-              title="Current theme based on background image"
-            >
-              🎨 Auto Theme
-            </button>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    <!-- Color Extraction and Theme Application Script -->
-    <script src="index.html"></script>
+    <hr class="bg-white" />
+    <div class="w-full h-40 bg-amber-500">footer</div>
 
     <script src="background-changer.js"></script>
     <script src="globalFontColorChanger.js"></script>

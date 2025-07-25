@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Theme Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .bg-image {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: all 0.5s ease;
+      }
+
+      .color-transition {
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+      }
+
+      .upload-area {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gray-100">
+    <!-- Background Image Container -->
+    <div
+      id="backgroundContainer"
+      class="fixed inset-0 bg-image bg-gray-200 -z-10"
+    ></div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 min-h-screen">
+      <!-- Header -->
+      <header class="p-6">
+        <div class="max-w-4xl mx-auto">
+          <h1 class="text-4xl font-bold text-white mb-4 drop-shadow-lg">
+            Aman Sahu
+          </h1>
+          <p class="text-white/90 drop-shadow">Thanks for using my website</p>
+        </div>
+      </header>
+
+      <!-- Upload Section -->
+      <div class="max-w-4xl mx-auto p-6">
+        <div class="upload-area rounded-xl hidden p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">Change Background Image</h2>
+          <div class="flex flex-wrap gap-4 items-center">
+            <input
+              type="file"
+              id="imageInput"
+              accept="image/*"
+              class="hidden"
+            />
+            <button
+              onclick="document.getElementById('imageInput').click()"
+              id="uploadBtn"
+              class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 color-transition"
+            >
+              Choose Image
+            </button>
+            <button
+              onclick="useRandomImage()"
+              id="randomBtn"
+              class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 color-transition"
+            >
+              Use Random Image
+            </button>
+            <div id="colorInfo" class="text-sm text-gray-600"></div>
+          </div>
+        </div>
+
+        <!-- Sample Content with Dynamic Colors -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <!-- Card 1 -->
+          <div
+            id="card1"
+            class="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg color-transition"
+          >
+            <h3 class="text-xl font-semibold mb-3">Dynamic Card 1</h3>
+            <p class="text-gray-600 mb-4">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Reprehenderit adipisci quam ratione amet minus sapiente
+              dignissimos! Esse voluptas ipsa nesciunt nemo minus,
+              exercitationem mollitia error quidem. Corrupti sapiente fugiat ad!
+            </p>
+            <button
+              id="btn1"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg color-transition"
+            >
+              Action Button
+            </button>
+            <button
+              id="btn1"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg color-transition"
+            >
+              Action Button
+            </button>
+            <button
+              id="btn1"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg color-transition"
+            >
+              Action Button
+            </button>
+          </div>
+
+          <!-- Card 2 -->
+          <div
+            id="card2"
+            class="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg color-transition"
+          >
+            <h3 class="text-xl font-semibold mb-3">Dynamic Card 2</h3>
+            <p class="text-gray-600 mb-4">
+              Watch how the theme adapts to match your background image
+              automatically.
+            </p>
+            <button
+              id="btn2"
+              class="bg-green-500 text-white px-4 py-2 rounded-lg color-transition"
+            >
+              Learn More
+            </button>
+          </div>
+
+          <!-- Card 3 -->
+          <div
+            id="card3"
+            class="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg color-transition"
+          >
+            <h3 class="text-xl font-semibold mb-3">Dynamic Card 3</h3>
+            <p class="text-gray-600 mb-4">
+              Multiple color variations are extracted and applied to different
+              elements.
+            </p>
+            <button
+              id="btn3"
+              class="bg-purple-500 text-white px-4 py-2 rounded-lg color-transition"
+            >
+              Get Started
+            </button>
+          </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <nav
+          id="navbar"
+          class="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg color-transition"
+        >
+          <div class="flex flex-wrap gap-4 justify-center">
+            <a
+              href="#"
+              id="nav1"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg color-transition"
+              >Home</a
+            >
+            <a
+              href="#"
+              id="nav2"
+              class="bg-gray-500 text-white px-4 py-2 rounded-lg color-transition"
+              >About</a
+            >
+            <a
+              href="#"
+              id="nav3"
+              class="bg-gray-500 text-white px-4 py-2 rounded-lg color-transition"
+              >Services</a
+            >
+            <a
+              href="#"
+              id="nav4"
+              class="bg-gray-500 text-white px-4 py-2 rounded-lg color-transition"
+              >Contact</a
+            >
+          </div>
+        </nav>
+
+        <!-- Color Palette Display -->
+        <div
+          id="paletteDisplay"
+          class="mt-8 bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg color-transition"
+        >
+          <h3 class="text-xl font-semibold mb-4">Extracted Color Palette</h3>
+          <div id="colorPalette" class="flex flex-wrap gap-3"></div>
+        </div>
+      </div>
+      <a href="/" rel="home"
+        ><img
+          alt="Home"
+          height="78"
+          src="https://dcx0p3on5z8dw.cloudfront.net/Aakash/s3fs-public/pdf_management_files/sm_sa/aakash-logo.png"
+          style="height: 78px"
+          width="111"
+          loading="lazy"
+          class="img-global"
+      /></a>
+      <div class="follow-new-block">
+        <span>Follow Us:</span>
+        <ul>
+          <li>
+            <a
+              class="facebook"
+              href="http://www.facebook.com/aakasheducation"
+              rel="nofollow"
+              target="_blank"
+              ><img
+                alt="facebook"
+                data-entity-type="file"
+                data-entity-uuid="cc23cf79-fa90-427c-8def-33dccdada83c"
+                height="36"
+                loading="lazy"
+                src="https://dcx0p3on5z8dw.cloudfront.net/Aakash/s3fs-public/inline-images/blank.png?3DwVxFndPxT.PUw.aN9icHV6QWtejCEQ"
+                width="36"
+                class="img-global"
+            /></a>
+          </li>
+          <li>
+            <a
+              class="twitter"
+              href="https://twitter.com/AESL_Official"
+              rel="nofollow"
+              target="_blank"
+              ><img
+                alt="twitter"
+                data-entity-type="file"
+                data-entity-uuid="cc23cf79-fa90-427c-8def-33dccdada83c"
+                height="36"
+                loading="lazy"
+                src="https://dcx0p3on5z8dw.cloudfront.net/Aakash/s3fs-public/inline-images/blank.png?3DwVxFndPxT.PUw.aN9icHV6QWtejCEQ"
+                width="36"
+                class="img-global"
+            /></a>
+          </li>
+          <!-- <li><a href="https://plus.google.com/u/0/111026209282705554694/posts" target="_blank" class="google" rel="nofollow">&nbsp;</a></li> -->
+          <li>
+            <a
+              class="youtube"
+              href="https://www.youtube.com/user/AakashEducation"
+              rel="nofollow"
+              target="_blank"
+              ><img
+                alt="youtube"
+                data-entity-type="file"
+                data-entity-uuid="cc23cf79-fa90-427c-8def-33dccdada83c"
+                height="36"
+                loading="lazy"
+                src="https://dcx0p3on5z8dw.cloudfront.net/Aakash/s3fs-public/inline-images/blank.png?3DwVxFndPxT.PUw.aN9icHV6QWtejCEQ"
+                width="36"
+                class="img-global"
+            /></a>
+          </li>
+          <li>
+            <a
+              class="blog"
+              href="https://www.aakash.ac.in/blog/"
+              rel="nofollow"
+              target="_blank"
+              ><img
+                alt="blog"
+                data-entity-type="file"
+                data-entity-uuid="cc23cf79-fa90-427c-8def-33dccdada83c"
+                height="36"
+                loading="lazy"
+                src="https://dcx0p3on5z8dw.cloudfront.net/Aakash/s3fs-public/inline-images/blank.png?3DwVxFndPxT.PUw.aN9icHV6QWtejCEQ"
+                width="36"
+                class="img-global"
+            /></a>
+          </li>
+          <li>
+            <a
+              class="instagram"
+              href="https://www.instagram.com/aakasheducation/"
+              rel="nofollow"
+              target="_blank"
+              ><img
+                alt="instagram"
+                data-entity-type="file"
+                data-entity-uuid="cc23cf79-fa90-427c-8def-33dccdada83c"
+                height="36"
+                loading="lazy"
+                src="https://dcx0p3on5z8dw.cloudfront.net/Aakash/s3fs-public/inline-images/blank.png?3DwVxFndPxT.PUw.aN9icHV6QWtejCEQ"
+                width="36"
+                class="img-global"
+            /></a>
+          </li>
+          <li>
+            <a
+              class="linkedin"
+              href="https://www.linkedin.com/company/aakash-educational-services-limited/"
+              rel="nofollow"
+              target="_blank"
+              ><img
+                alt="linkedin"
+                data-entity-type="file"
+                data-entity-uuid="cc23cf79-fa90-427c-8def-33dccdada83c"
+                height="36"
+                loading="lazy"
+                src="https://dcx0p3on5z8dw.cloudfront.net/Aakash/s3fs-public/inline-images/blank.png?3DwVxFndPxT.PUw.aN9icHV6QWtejCEQ"
+                width="36"
+                class="img-global"
+            /></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      // Color extraction functions (simplified for this use case)
+      function getImageData(img) {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Resize for performance
+        const maxSize = 200;
+        let { width, height } = img;
+
+        if (width > height) {
+          if (width > maxSize) {
+            height = (height * maxSize) / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width = (width * maxSize) / height;
+            height = maxSize;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        return ctx.getImageData(0, 0, width, height);
+      }
+
+      function getKMeansColors(imageData, k = 5) {
+        const data = imageData.data;
+        const pixels = [];
+
+        // Sample pixels for performance
+        for (let i = 0; i < data.length; i += 16) {
+          if (data[i + 3] > 128) {
+            // Skip transparent
+            pixels.push([data[i], data[i + 1], data[i + 2]]);
+          }
+        }
+
+        if (pixels.length === 0) return [{ r: 100, g: 100, b: 100 }];
+
+        // Initialize centroids
+        const centroids = [];
+        for (let i = 0; i < k; i++) {
+          const randomPixel = pixels[Math.floor(Math.random() * pixels.length)];
+          centroids.push([...randomPixel]);
+        }
+
+        // K-means iterations
+        for (let iter = 0; iter < 10; iter++) {
+          const clusters = Array(k)
+            .fill()
+            .map(() => []);
+
+          // Assign pixels to nearest centroid
+          pixels.forEach((pixel) => {
+            let minDistance = Infinity;
+            let clusterIndex = 0;
+
+            centroids.forEach((centroid, i) => {
+              const distance = Math.sqrt(
+                Math.pow(pixel[0] - centroid[0], 2) +
+                  Math.pow(pixel[1] - centroid[1], 2) +
+                  Math.pow(pixel[2] - centroid[2], 2)
+              );
+
+              if (distance < minDistance) {
+                minDistance = distance;
+                clusterIndex = i;
+              }
+            });
+
+            clusters[clusterIndex].push(pixel);
+          });
+
+          // Update centroids
+          centroids.forEach((centroid, i) => {
+            if (clusters[i].length > 0) {
+              centroid[0] =
+                clusters[i].reduce((sum, p) => sum + p[0], 0) /
+                clusters[i].length;
+              centroid[1] =
+                clusters[i].reduce((sum, p) => sum + p[1], 0) /
+                clusters[i].length;
+              centroid[2] =
+                clusters[i].reduce((sum, p) => sum + p[2], 0) /
+                clusters[i].length;
+            }
+          });
+        }
+
+        // Sort by cluster size and return colors
+        const colorClusters = centroids.map((centroid, i) => {
+          const clusterSize = pixels.filter((pixel) => {
+            const distances = centroids.map((c) =>
+              Math.sqrt(
+                Math.pow(pixel[0] - c[0], 2) +
+                  Math.pow(pixel[1] - c[1], 2) +
+                  Math.pow(pixel[2] - c[2], 2)
+              )
+            );
+            return distances.indexOf(Math.min(...distances)) === i;
+          }).length;
+
+          return {
+            r: Math.round(centroid[0]),
+            g: Math.round(centroid[1]),
+            b: Math.round(centroid[2]),
+            size: clusterSize,
+          };
+        });
+
+        return colorClusters.sort((a, b) => b.size - a.size);
+      }
+
+      function rgbToHex(r, g, b) {
+        return (
+          "#" +
+          [r, g, b]
+            .map((x) => {
+              const hex = x.toString(16);
+              return hex.length === 1 ? "0" + hex : hex;
+            })
+            .join("")
+        );
+      }
+
+      function adjustBrightness(color, factor) {
+        return {
+          r: Math.min(255, Math.max(0, Math.round(color.r * factor))),
+          g: Math.min(255, Math.max(0, Math.round(color.g * factor))),
+          b: Math.min(255, Math.max(0, Math.round(color.b * factor))),
+        };
+      }
+
+      function isColorLight(color) {
+        const brightness =
+          (color.r * 299 + color.g * 587 + color.b * 114) / 1000;
+        return brightness > 128;
+      }
+
+      // Main function to apply theme
+      function applyTheme(imageUrl) {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+
+        img.onload = function () {
+          // Set background image
+          const bgContainer = document.getElementById("backgroundContainer");
+          bgContainer.style.backgroundImage = `url(${imageUrl})`;
+
+          // Extract colors
+          const imageData = getImageData(img);
+          const colors = getKMeansColors(imageData, 5);
+
+          // Apply colors to elements
+          applyColorsToElements(colors);
+
+          // Show color palette
+          displayColorPalette(colors);
+
+          // Update color info
+          const colorInfo = document.getElementById("colorInfo");
+          const dominantHex = rgbToHex(colors[0].r, colors[0].g, colors[0].b);
+          colorInfo.textContent = `Dominant color: ${dominantHex}`;
+        };
+
+        img.src = imageUrl;
+      }
+
+      function applyColorsToElements(colors) {
+        // Get base colors with variations
+        const primary = colors[0];
+        const secondary = colors[1] || primary;
+        const tertiary = colors[2] || secondary;
+
+        // Create variations
+        const primaryHex = rgbToHex(primary.r, primary.g, primary.b);
+        const primaryLight = adjustBrightness(primary, 1.3);
+        const primaryLightHex = rgbToHex(
+          primaryLight.r,
+          primaryLight.g,
+          primaryLight.b
+        );
+        const primaryDark = adjustBrightness(primary, 0.7);
+        const primaryDarkHex = rgbToHex(
+          primaryDark.r,
+          primaryDark.g,
+          primaryDark.b
+        );
+
+        const secondaryHex = rgbToHex(secondary.r, secondary.g, secondary.b);
+        const tertiaryHex = rgbToHex(tertiary.r, tertiary.g, tertiary.b);
+
+        // Apply to cards (lighter versions)
+        updateElementClass("card1", `bg-[${primaryLightHex}]/70`);
+        updateElementClass("card2", `bg-[${secondaryHex}]/60`);
+        updateElementClass("card3", `bg-[${tertiaryHex}]/60`);
+        updateElementClass("navbar", `bg-[${primaryLightHex}]/80`);
+        updateElementClass("paletteDisplay", `bg-[${primaryLightHex}]/70`);
+
+        // Apply to buttons
+        updateElementClass(
+          "btn1",
+          `bg-[${primaryHex}]`,
+          `hover:bg-[${primaryDarkHex}]`
+        );
+        updateElementClass("btn2", `bg-[${secondaryHex}]`);
+        updateElementClass("btn3", `bg-[${tertiaryHex}]`);
+        updateElementClass(
+          "uploadBtn",
+          `bg-[${primaryHex}]`,
+          `hover:bg-[${primaryDarkHex}]`
+        );
+        updateElementClass("randomBtn", `bg-[${secondaryHex}]`);
+
+        // Apply to navigation
+        updateElementClass("nav1", `bg-[${primaryHex}]`);
+        updateElementClass("nav2", `bg-[${secondaryHex}]`);
+        updateElementClass("nav3", `bg-[${tertiaryHex}]`);
+        updateElementClass("nav4", `bg-[${primaryDarkHex}]`);
+      }
+
+      function updateElementClass(elementId, newBgClass, hoverClass = "") {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        // Remove existing bg- classes
+        const classes = element.className.split(" ");
+        const filteredClasses = classes.filter(
+          (cls) =>
+            !cls.startsWith("bg-[") &&
+            !cls.startsWith("hover:bg-[") &&
+            !cls.startsWith("bg-blue") &&
+            !cls.startsWith("bg-green") &&
+            !cls.startsWith("bg-purple") &&
+            !cls.startsWith("bg-gray") &&
+            !cls.startsWith("bg-white")
+        );
+
+        // Add new classes
+        filteredClasses.push(newBgClass);
+        if (hoverClass) filteredClasses.push(hoverClass);
+
+        element.className = filteredClasses.join(" ");
+      }
+
+      function displayColorPalette(colors) {
+        const palette = document.getElementById("colorPalette");
+        palette.innerHTML = "";
+
+        colors.forEach((color, index) => {
+          const hex = rgbToHex(color.r, color.g, color.b);
+          const colorDiv = document.createElement("div");
+          colorDiv.className =
+            "flex items-center gap-2 bg-white/80 rounded-lg p-2";
+          colorDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded border border-gray-300" style="background-color: ${hex}"></div>
+                    <div class="text-sm">
+                        <div class="font-mono">${hex}</div>
+                        <div class="text-gray-500 text-xs">${
+                          index === 0
+                            ? "Primary"
+                            : index === 1
+                            ? "Secondary"
+                            : "Accent"
+                        }</div>
+                    </div>
+                `;
+          palette.appendChild(colorDiv);
+        });
+      }
+
+      // Sample images for demo
+      const sampleImages = [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800",
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800",
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+        "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800",
+      ];
+
+      function useRandomImage() {
+        const randomImage =
+          sampleImages[Math.floor(Math.random() * sampleImages.length)];
+        applyTheme(randomImage);
+      }
+
+      // File upload handler
+      document
+        .getElementById("imageInput")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              applyTheme(e.target.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+      // Initialize with a default image
+      window.addEventListener("load", () => {
+        useRandomImage();
+      });
+    </script>
+  </body>
+</html>
