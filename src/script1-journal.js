@@ -18,6 +18,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const unlockBtn = document.getElementById("unlockBtn");
   const mediaContainer = document.getElementById("mediaContainer");
 
+  // Delete modal elements
+  let entryToDelete = null;
+  const deleteModal = document.getElementById("deleteModal");
+  const passwordSection = document.getElementById("passwordSection");
+  const confirmSection = document.getElementById("confirmSection");
+  const deletePassword = document.getElementById("deletePassword");
+  const passwordError = document.getElementById("passwordError");
+  const verifyPasswordBtn = document.getElementById("verifyPasswordBtn");
+  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+  const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+
   // State
   let currentEntryId = null;
   let isLocked = localStorage.getItem("diaryLocked") === "true";
@@ -38,6 +49,128 @@ document.addEventListener("DOMContentLoaded", function () {
   } else {
     loadEntries();
     checkLockStatus();
+    // Initialize delete modal AFTER DOM is ready
+    initDeleteModal();
+  }
+
+  // Initialize modal event listeners - MOVED TO TOP LEVEL
+  function initDeleteModal() {
+    console.log("Initializing delete modal"); // Debug log
+
+    // Verify password button
+    if (verifyPasswordBtn) {
+      verifyPasswordBtn.addEventListener("click", verifyPassword);
+    }
+
+    // Confirm delete button
+    if (confirmDeleteBtn) {
+      confirmDeleteBtn.addEventListener("click", performDelete);
+    }
+
+    // Cancel button
+    if (cancelDeleteBtn) {
+      cancelDeleteBtn.addEventListener("click", hideDeleteModal);
+    }
+
+    // Add Enter key support for password input
+    if (deletePassword) {
+      deletePassword.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          verifyPassword();
+        }
+      });
+    }
+  }
+
+  // Show the delete modal
+  function showDeleteModal() {
+    console.log("Showing delete modal for entry:", entryToDelete); // Debug log
+
+    if (!deleteModal) {
+      console.error("Delete modal not found!");
+      return;
+    }
+
+    // Reset modal state
+    if (passwordSection) passwordSection.classList.remove("hidden");
+    if (confirmSection) confirmSection.classList.add("hidden");
+    if (verifyPasswordBtn) verifyPasswordBtn.classList.remove("hidden");
+    if (confirmDeleteBtn) confirmDeleteBtn.classList.add("hidden");
+    if (passwordError) passwordError.classList.add("hidden");
+    if (deletePassword) deletePassword.value = "";
+
+    // Show modal
+    deleteModal.classList.remove("hidden");
+    if (deletePassword) deletePassword.focus();
+  }
+
+  // Hide the delete modal
+  function hideDeleteModal() {
+    console.log("Hiding delete modal"); // Debug log
+    if (deleteModal) {
+      deleteModal.classList.add("hidden");
+    }
+    entryToDelete = null;
+  }
+
+  // Verify the entered password
+  function verifyPassword() {
+    console.log("Verifying password"); // Debug log
+
+    const savedPassword = localStorage.getItem("diaryPassword");
+    const enteredPassword = deletePassword ? deletePassword.value.trim() : "";
+
+    if (enteredPassword === savedPassword) {
+      // Password correct - show confirmation
+      if (passwordSection) passwordSection.classList.add("hidden");
+      if (confirmSection) confirmSection.classList.remove("hidden");
+      if (verifyPasswordBtn) verifyPasswordBtn.classList.add("hidden");
+      if (confirmDeleteBtn) confirmDeleteBtn.classList.remove("hidden");
+      if (passwordError) passwordError.classList.add("hidden");
+    } else {
+      // Password incorrect
+      if (passwordError) passwordError.classList.remove("hidden");
+      if (deletePassword) deletePassword.focus();
+    }
+  }
+
+  // Perform the actual deletion
+  function performDelete() {
+    console.log("Performing delete for entry:", entryToDelete); // Debug log
+
+    if (!entryToDelete) return;
+
+    const entries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
+    const updatedEntries = entries.filter(
+      (entry) => entry.id !== entryToDelete
+    );
+
+    localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+
+    // If we deleted the currently viewed entry, clear the editor
+    if (currentEntryId === entryToDelete) {
+      createNewEntry();
+    }
+
+    hideDeleteModal();
+    loadEntries();
+    showNotification("🗑️ Entry deleted successfully!", "success");
+  }
+
+  // Handle delete button clicks using event delegation
+  function handleDeleteClick(entryId) {
+    console.log("Delete clicked for entry:", entryId); // Debug log
+    entryToDelete = entryId;
+    showDeleteModal();
+  }
+
+  //count entries
+  function updateEntryCounter() {
+    const entries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
+    const totalEntriesElement = document.getElementById("totalEntries");
+    if (totalEntriesElement) {
+      totalEntriesElement.textContent = `Total Entries: ${entries.length}`;
+    }
   }
 
   // Placeholder handling for contenteditable
@@ -96,22 +229,46 @@ document.addEventListener("DOMContentLoaded", function () {
         const entryElement = document.createElement("div");
         entryElement.className =
           "entry-card p-3 rounded-lg cursor-pointer text-sm transition-all duration-300";
+
         entryElement.innerHTML = `
-                <div class="font-medium text-amber-900">${
-                  entry.title || "Untitled Entry"
-                }</div>
-                <div class="text-xs text-amber-700 mt-1">${formatDate(
-                  entry.date
-                )}</div>
-                <div class="text-xs text-gray-600 mt-1">${entry.content
-                  .replace(/<[^>]*>/g, "")
-                  .substring(0, 50)}${
+          <div class="flex justify-between items-start">
+            <div class="entry-content" data-entry-id="${entry.id}">
+              <div class="font-medium text-amber-900">${
+                entry.title || "Untitled Entry"
+              }</div>
+              <div class="text-xs text-amber-700 mt-1">${formatDate(
+                entry.date
+              )}</div>
+              <div class="text-xs text-gray-600 mt-1">${entry.content
+                .replace(/<[^>]*>/g, "")
+                .substring(0, 50)}${
           entry.content.length > 50 ? "..." : ""
         }</div>
-              `;
-        entryElement.addEventListener("click", () => loadEntry(entry.id));
+            </div>
+            <button class="delete-entry-btn text-xs text-red-600 hover:text-red-800 ml-2 px-2 py-1 rounded" 
+                    data-entry-id="${entry.id}">
+              Delete
+            </button>
+          </div>
+        `;
+
+        // Add click listener for loading entry (only on content area)
+        const contentArea = entryElement.querySelector(".entry-content");
+        contentArea.addEventListener("click", () => loadEntry(entry.id));
+
+        // Add click listener for delete button
+        const deleteBtn = entryElement.querySelector(".delete-entry-btn");
+        deleteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          console.log("Delete button clicked for entry:", entry.id); // Debug log
+          handleDeleteClick(entry.id);
+        });
+
         previousEntries.appendChild(entryElement);
       });
+
+    updateEntryCounter();
   }
 
   function formatDate(dateString) {
@@ -188,6 +345,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loadEntries();
     playSuccessSound();
     showNotification("✅ Entry saved successfully!", "success");
+    updateEntryCounter();
   }
 
   function playSuccessSound() {

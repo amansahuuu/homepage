@@ -16,10 +16,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   achievements.forEach((entry) => {
     const item = document.createElement("li");
-    item.className = "bg-white/10 p-3 rounded-lg";
-    item.innerHTML = `
-      <div class="font-semibold">${entry.time}</div> <!-- Use entry.time (already formatted) -->
-      <div class="opacity-90">${entry.text}</div>
+    item.className = " p-2 rounded-lg";
+    item.innerHTML = `<div class="p-4 bg-white/40 backdrop-blur-sm rounded-lg shadow-sm space-y-2 hover:bg-white/60 transition-all">
+  <div class="text-gray-800 opacity-90 text-base leading-relaxed">
+    ${entry.text}
+  </div>
+  
+  <div class="text-sm text-gray-600 font-semibold">
+    • ${entry.time}
+  </div>
+
+  
+</div>
+
     `;
     list.appendChild(item);
   });
