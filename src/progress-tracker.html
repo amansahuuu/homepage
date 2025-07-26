@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Progress Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+CJK+JP:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .ancient-font {
+        font-family: "Noto Serif CJK JP", serif;
+      }
+      .scroll-shadow {
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .ancient-bg {
+        background-image: radial-gradient(
+            circle at 20% 80%,
+            rgba(120, 119, 198, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(255, 119, 198, 0.1) 0%,
+            transparent 50%
+          ),
+          linear-gradient(
+            45deg,
+            var(--bg-primary, #f5f1e8) 0%,
+            var(--bg-secondary, #faf7f0) 50%,
+            var(--bg-tertiary, #f0ede0) 100%
+          );
+      }
+      .user-bg {
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+      .backdrop-filter {
+        backdrop-filter: blur(10px);
+      }
+      .chinese-text {
+        position: absolute;
+        font-family: "Noto Serif CJK JP", serif;
+        opacity: 0.05;
+        pointer-events: none;
+        z-index: 0;
+        font-size: 8rem;
+        font-weight: 100;
+        color: var(--text-primary, #2d1810);
+      }
+      .content-layer {
+        position: relative;
+        z-index: 1;
+      }
+
+      :root {
+        --bg-primary: #f5f1e8;
+        --bg-secondary: #faf7f0;
+        --bg-tertiary: #f0ede0;
+        --text-primary: #2d1810;
+        --text-secondary: #8b6914;
+        --accent-primary: #cc2936;
+        --accent-secondary: #4a6741;
+        --accent-tertiary: #d4af37;
+        --border-color: #8b6914;
+      }
+    </style>
+  </head>
+  <body
+    class="ancient-bg text-gray-800 ancient-font min-h-screen relative"
+    id="mainBody"
+  >
+    <!-- Background Chinese Characters -->
+    <div class="chinese-text" style="top: 10%; left: 5%">道</div>
+    <div class="chinese-text" style="top: 30%; right: 10%">學</div>
+    <div class="chinese-text" style="bottom: 20%; left: 15%">進</div>
+    <div class="chinese-text" style="top: 60%; right: 5%">習</div>
+    <div class="chinese-text" style="bottom: 40%; left: 70%">完</div>
+
+    <!-- Header -->
+    <header
+      class="backdrop-filter bg-white bg-opacity-70 border-b border-gray-300 px-2 py-2 shadow-lg content-layer"
+    >
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <div class="text-2xl opacity-30">📜</div>
+          <div>
+            <h1 class="text-xl font-bold" style="color: var(--text-primary)">
+              Progress Tracker
+            </h1>
+            <p class="text-xs opacity-60">Track your learning journey</p>
+          </div>
+        </div>
+        <div class="flex space-x-2">
+          <button
+            id="addGoalBtn"
+            onclick="showGoalCreation()"
+            class="text-white text-xs px-2 py-1 rounded transition duration-200 hover:opacity-80"
+            style="background-color: var(--accent-secondary)"
+          >
+            + New Goal
+          </button>
+          <button
+            id="setPasswordBtn"
+            onclick="showPasswordSetup()"
+            class="text-white text-xs px-2 py-1 rounded transition duration-200 hover:opacity-80"
+            style="background-color: var(--accent-primary)"
+          >
+            Set Password
+          </button>
+          <button
+            onclick="showThemeModal()"
+            class="text-gray-600 text-xs px-1 py-1 rounded transition duration-200 hover:bg-gray-200 opacity-50"
+            title="Theme Settings"
+          >
+            🎨
+          </button>
+        </div>
+      </div>
+      <div id="goalShortcuts" class="flex flex-wrap gap-1 mt-2"></div>
+    </header>
+
+    <div class="flex flex-col lg:flex-row min-h-screen content-layer">
+      <!-- Goal Creation Panel -->
+      <div
+        id="goalCreationPanel"
+        class="hidden w-full lg:w-1/4 backdrop-filter bg-white bg-opacity-80 border-r border-gray-300 p-3 max-h-screen overflow-y-auto scroll-shadow"
+      >
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="text-lg font-bold flex items-center">
+            <span class="mr-2">📝</span>Create New Goal
+          </h2>
+          <button
+            onclick="hideGoalCreation()"
+            class="text-gray-600 hover:text-gray-800 text-lg"
+          >
+            ×
+          </button>
+        </div>
+
+        <div id="goalCreationForm" class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium mb-1">Goal Name</label>
+            <input
+              type="text"
+              id="goalName"
+              class="w-full p-2 bg-white bg-opacity-90 rounded border border-gray-300 focus:border-gray-500 focus:outline-none text-sm"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1"
+              >Number of Subjects</label
+            >
+            <input
+              type="number"
+              id="totalSubjects"
+              min="1"
+              class="w-full p-2 bg-white bg-opacity-90 rounded border border-gray-300 focus:border-gray-500 focus:outline-none text-sm"
+            />
+          </div>
+
+          <button
+            onclick="createSubjectInputs()"
+            class="w-full text-white font-bold py-2 px-3 rounded transition duration-200 text-sm"
+            style="background-color: var(--accent-secondary)"
+          >
+            Create Subject Inputs
+          </button>
+        </div>
+
+        <div id="subjectInputs" class="mt-4 space-y-3 hidden">
+          <h3 class="text-md font-semibold">Subject Details</h3>
+          <div id="subjectsList"></div>
+          <button
+            onclick="createGoal()"
+            class="w-full text-white font-bold py-2 px-3 rounded transition duration-200 text-sm"
+            style="background-color: var(--accent-primary)"
+          >
+            Create Goal
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col lg:flex-row">
+        <!-- Active Goals -->
+        <div
+          id="activeGoalsColumn"
+          class="flex-1 backdrop-filter bg-white bg-opacity-60 p-3 max-h-screen overflow-y-auto scroll-shadow"
+        >
+          <h2 class="text-lg font-bold mb-3 flex items-center">
+            <span class="mr-2">⚡</span>Active Goals
+          </h2>
+          <div id="activeGoals" class="space-y-4"></div>
+        </div>
+
+        <!-- Completed Goals -->
+        <div
+          id="completedGoalsColumn"
+          class="w-full lg:w-1/4 backdrop-filter bg-white bg-opacity-60 border-l border-gray-300 p-3 max-h-screen overflow-y-auto scroll-shadow"
+        >
+          <h2 class="text-lg font-bold mb-3 text-green-800 flex items-center">
+            <span class="mr-2">✅</span>Completed
+          </h2>
+          <div id="completedGoals" class="space-y-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme Settings Modal -->
+    <div
+      id="themeModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4"
+    >
+      <div
+        class="backdrop-filter bg-white bg-opacity-90 p-6 rounded-lg max-w-md w-full border border-gray-300"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold">Theme Settings</h3>
+          <button
+            onclick="closeThemeModal()"
+            class="text-gray-600 hover:text-gray-800 text-xl"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-2"
+              >Upload Background Image</label
+            >
+            <input
+              type="file"
+              id="backgroundImage"
+              accept="image/*"
+              onchange="handleImageUpload(event)"
+              class="w-full p-2 bg-white rounded border border-gray-300 focus:border-gray-500 focus:outline-none text-sm"
+            />
+            <p class="text-xs text-gray-600 mt-1">
+              Colors will be automatically extracted from your image
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-2"
+              >Predefined Themes</label
+            >
+            <div class="grid grid-cols-3 gap-2">
+              <button
+                onclick="applyTheme('ancient')"
+                class="p-3 rounded border border-gray-300 hover:border-gray-500 transition duration-200"
+              >
+                <div
+                  class="w-full h-6 bg-gradient-to-r from-yellow-100 to-amber-100 rounded mb-1"
+                ></div>
+                <span class="text-xs">Ancient</span>
+              </button>
+              <button
+                onclick="applyTheme('ocean')"
+                class="p-3 rounded border border-gray-300 hover:border-gray-500 transition duration-200"
+              >
+                <div
+                  class="w-full h-6 bg-gradient-to-r from-blue-100 to-cyan-100 rounded mb-1"
+                ></div>
+                <span class="text-xs">Ocean</span>
+              </button>
+              <button
+                onclick="applyTheme('forest')"
+                class="p-3 rounded border border-gray-300 hover:border-gray-500 transition duration-200"
+              >
+                <div
+                  class="w-full h-6 bg-gradient-to-r from-green-100 to-emerald-100 rounded mb-1"
+                ></div>
+                <span class="text-xs">Forest</span>
+              </button>
+              <button
+                onclick="applyTheme('sunset')"
+                class="p-3 rounded border border-gray-300 hover:border-gray-500 transition duration-200"
+              >
+                <div
+                  class="w-full h-6 bg-gradient-to-r from-orange-100 to-pink-100 rounded mb-1"
+                ></div>
+                <span class="text-xs">Sunset</span>
+              </button>
+              <button
+                onclick="applyTheme('minimal')"
+                class="p-3 rounded border border-gray-300 hover:border-gray-500 transition duration-200"
+              >
+                <div
+                  class="w-full h-6 bg-gradient-to-r from-gray-100 to-white rounded mb-1"
+                ></div>
+                <span class="text-xs">Minimal</span>
+              </button>
+              <button
+                onclick="applyTheme('dark')"
+                class="p-3 rounded border border-gray-300 hover:border-gray-500 transition duration-200"
+              >
+                <div
+                  class="w-full h-6 bg-gradient-to-r from-gray-700 to-gray-900 rounded mb-1"
+                ></div>
+                <span class="text-xs">Dark</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-2"
+              >Background Opacity</label
+            >
+            <input
+              type="range"
+              id="bgOpacity"
+              min="10"
+              max="90"
+              value="70"
+              onchange="updateOpacity(this.value)"
+              class="w-full"
+            />
+            <div class="flex justify-between text-xs text-gray-600">
+              <span>Transparent</span>
+              <span>Opaque</span>
+            </div>
+          </div>
+
+          <button
+            onclick="resetTheme()"
+            class="w-full bg-gray-500 text-white font-bold py-2 px-3 rounded transition duration-200 hover:bg-gray-600 text-sm"
+          >
+            Reset to Default
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div
+      id="customAlert"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4"
+    >
+      <div
+        class="backdrop-filter bg-white bg-opacity-90 p-4 rounded-lg max-w-sm w-full border border-gray-300"
+      >
+        <div class="flex items-center mb-3">
+          <div id="alertIcon" class="mr-2 text-lg"></div>
+          <h3 id="alertTitle" class="text-md font-bold"></h3>
+        </div>
+        <p id="alertMessage" class="text-gray-700 mb-4 text-sm"></p>
+        <div class="flex justify-end">
+          <button
+            onclick="closeCustomAlert()"
+            class="text-white font-bold py-1 px-3 rounded transition duration-200 text-sm"
+            style="background-color: var(--accent-secondary)"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div
+      id="customConfirm"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4"
+    >
+      <div
+        class="backdrop-filter bg-white bg-opacity-90 p-4 rounded-lg max-w-sm w-full border border-gray-300"
+      >
+        <div class="flex items-center mb-3">
+          <div class="mr-2 text-lg text-yellow-600">⚠️</div>
+          <h3 class="text-md font-bold text-yellow-700">Confirm Action</h3>
+        </div>
+        <p id="confirmMessage" class="text-gray-700 mb-4 text-sm"></p>
+        <div class="flex space-x-2">
+          <button
+            onclick="closeCustomConfirm(false)"
+            class="flex-1 bg-gray-500 text-white font-bold py-1 px-2 rounded transition duration-200 text-sm"
+          >
+            Cancel
+          </button>
+          <button
+            onclick="closeCustomConfirm(true)"
+            class="flex-1 text-white font-bold py-1 px-2 rounded transition duration-200 text-sm"
+            style="background-color: var(--accent-primary)"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Setup Modal -->
+    <div
+      id="passwordSetupModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4"
+    >
+      <div
+        class="backdrop-filter bg-white bg-opacity-90 p-4 rounded-lg max-w-sm w-full border border-gray-300"
+      >
+        <h3 class="text-md font-bold mb-3 flex items-center">
+          <span class="mr-2">🔐</span>Password Setup
+        </h3>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium mb-1"
+              >Create Password</label
+            >
+            <input
+              type="password"
+              id="newPassword"
+              class="w-full p-2 bg-white rounded border border-gray-300 focus:border-gray-500 focus:outline-none text-sm"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1"
+              >Confirm Password</label
+            >
+            <input
+              type="password"
+              id="confirmNewPassword"
+              class="w-full p-2 bg-white rounded border border-gray-300 focus:border-gray-500 focus:outline-none text-sm"
+            />
+          </div>
+        </div>
+
+        <div class="flex space-x-2 mt-4">
+          <button
+            onclick="closePasswordSetup()"
+            class="flex-1 bg-gray-500 text-white font-bold py-2 px-3 rounded transition duration-200 text-sm"
+          >
+            Cancel
+          </button>
+          <button
+            onclick="savePassword()"
+            class="flex-1 text-white font-bold py-2 px-3 rounded transition duration-200 text-sm"
+            style="background-color: var(--accent-primary)"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Verification Modal -->
+    <div
+      id="passwordModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4"
+    >
+      <div
+        class="backdrop-filter bg-white bg-opacity-90 p-4 rounded-lg max-w-sm w-full border border-gray-300"
+      >
+        <h3 class="text-md font-bold mb-3 flex items-center">
+          <span class="mr-2">✅</span>Complete Task
+        </h3>
+
+        <div class="mb-3 p-3 bg-yellow-100 border border-yellow-400 rounded-lg">
+          <p class="text-yellow-800 text-xs">
+            <strong>Be Honest:</strong> Only mark tasks as complete when you
+            have genuinely finished them. Your progress depends on your honesty
+            and commitment to learning.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium mb-1">Enter Password</label>
+            <input
+              type="password"
+              id="taskPassword"
+              class="w-full p-2 bg-white rounded border border-gray-300 focus:border-gray-500 focus:outline-none text-sm"
+            />
+          </div>
+
+          <div class="bg-red-100 border border-red-400 rounded-lg p-3">
+            <label class="flex items-center">
+              <input
+                type="checkbox"
+                id="confirmCompletion"
+                class="mr-2 w-3 h-3"
+              />
+              <span class="text-red-800 text-xs"
+                >I confirm that I have honestly completed this task</span
+              >
+            </label>
+          </div>
+        </div>
+
+        <div class="flex space-x-2 mt-4">
+          <button
+            onclick="closePasswordModal()"
+            class="flex-1 bg-gray-500 text-white font-bold py-2 px-3 rounded transition duration-200 text-sm"
+          >
+            Cancel
+          </button>
+          <button
+            onclick="confirmTaskCompletion()"
+            class="flex-1 text-white font-bold py-2 px-3 rounded transition duration-200 text-sm"
+            style="background-color: var(--accent-secondary)"
+          >
+            Confirm Completion
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter Actions Dropdown -->
+    <div
+      id="chapterDropdown"
+      class="fixed backdrop-filter bg-white bg-opacity-90 border border-gray-300 rounded-lg shadow-lg p-2 hidden z-40"
+    >
+      <button
+        onclick="markChapterComplete()"
+        class="w-full text-left px-2 py-1 hover:bg-gray-100 rounded text-sm text-green-700"
+      >
+        ✓ Mark Complete
+      </button>
+      <button
+        onclick="viewChapterDetails()"
+        class="w-full text-left px-2 py-1 hover:bg-gray-100 rounded text-sm text-blue-700"
+      >
+        📋 View Details
+      </button>
+    </div>
+
+    <!-- Dynamic Progress Tracker Div -->
+    <div id="progressTracker" class="hidden"></div>
+    <script src="progress-tracker.js"></script>
+  </body>
+</html>

@@ -74,9 +74,10 @@
             class="w-[120px] h-[120px] p-2"
           />
         </div>
-        <div class="text-4xl font-extrabold ml-1">
-          <h1 class="text-4xl">HOMEPAGE</h1>
+        <div class="ml-1">
+          <h1 class="text-4xl font-extrabold">HOMEPAGE</h1>
           <h1 class="text-[15px]" id="dateAndTime">date</h1>
+          <div id="weather"></div>
         </div>
       </div>
       <!-- Right: Quick Links -->
@@ -176,45 +177,30 @@
 
       <!--weather widget-->
       <div
-        id="weatherWidget"
-        class="backdrop-blur-sm bg-white/30 shadow-md rounded-xl p-4 w-full color-transition"
+        class="backdrop-blur-sm bg-white/30 shadow-md rounded-xl p-4 w-full mx-auto"
       >
         <div class="flex items-center justify-between mb-3">
-          <h1 class="text-2xl font-bold text-gray-800">Weather</h1>
+          <h1 class="text-2xl font-bold text-green-800">Progress</h1>
           <button
-            id="weatherOpenBtn"
-            onclick='window.location.href = "weather.html"'
+            id="openAppBtn"
+            onclick='window.location.href = "progress-tracker.html"'
             class="px-3 py-1.5 bg-gray-700 text-white text-sm rounded hover:bg-gray-800 transition-colors"
           >
             Open in App
           </button>
         </div>
-        <div
-          id="ww_7b1f910c265f2"
-          v="1.3"
-          loc="auto"
-          a='{"t":"horizontal","lang":"en","sl_lpl":1,"ids":[],"font":"Times","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"#FFFFFF00","cl_font":"#000000","cl_cloud":"#d4d4d4","cl_persp":"#2196F3","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'
-        >
-          <a
-            href="https://weatherwidget.org/"
-            id="ww_7b1f910c265f2_u"
-            target="_blank"
-            >HTML Weather Widget for website</a
-          >
+
+        <div id="progressTrackerWidget">
+          <!-- Progress content will be dynamically loaded here -->
         </div>
-        <script
-          async
-          src="https://app3.weatherwidget.org/js/?id=ww_7b1f910c265f2"
-        ></script>
 
         <!-- Footer -->
         <div class="mt-4 pt-3 border-t border-gray-300">
           <div class="text-xs text-gray-600 text-center">
-            Plan your day with current conditions
+            track your progress
           </div>
         </div>
       </div>
-
       <!--to do list-->
       <!-- To-Do Widget -->
       <div
@@ -391,7 +377,7 @@
         </div>
 
         <!--apps-->
-        <div class="grid grid-cols-3 gap-1 text-white text-lg">
+        <div class="flex flex-wrap gap-1 text-white text-lg">
           <div class="z-50">
             <input
               type="file"
@@ -502,7 +488,7 @@
               tasks, and staying organized. Customize your experience with
               dynamic themes and accessibility features.
             </p>
-            <div class="flex space-x-3">
+            <div class="flex flex-wrap gap-1">
               <button
                 id="footerBtn1"
                 onclick="window.location.href='https://www.instagram.com/asipx_xq';"
@@ -635,9 +621,8 @@
             </button>
             <div
               class="px-2 py-1 bg-white/10 rounded text-white/80 hover:bg-white/20 transition-colors"
-              title="Current theme based on background image"
             >
-              version-3.1|25-07-25
+              version-3.2|26-07-2
             </div>
           </div>
         </div>
@@ -658,5 +643,7 @@
     <script src="script-journal-widget.js"></script>
     <script src="script-motivation.js"></script>
     <script src="widget-music-player.js"></script>
+    <script src="script-progress-tracker-widget.js"></script>
+    <script src="weather.js"></script>
   </body>
 </html>
