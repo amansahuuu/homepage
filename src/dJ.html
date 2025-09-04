@@ -1,1 +1,1202 @@
 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>日記 - Daily Journal</title>
+    <link rel="stylesheet" href="./output.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@300;400;700&family=Ma+Shan+Zheng&family=Zcool+XiaoWei&display=swap");
+
+      body {
+        font-family: "Noto Sans JP", sans-serif;
+        background-image: url("https://images.unsplash.com/photo-1522383225653-ed111181a951?w=1920&h=1080&fit=crop");
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+      }
+
+      .paper-texture {
+        background-image: radial-gradient(
+            circle at 20% 50%,
+            rgba(138, 43, 226, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(255, 105, 180, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 80%,
+            rgba(221, 160, 221, 0.08) 0%,
+            transparent 50%
+          );
+        position: relative;
+      }
+
+      .paper-texture::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          transparent 49%,
+          rgba(147, 112, 219, 0.03) 50%,
+          transparent 51%
+        );
+        pointer-events: none;
+      }
+
+      .editor {
+        min-height: 400px;
+        padding: 2rem;
+        background: rgba(250, 240, 255, 0.95);
+        font-family: "Noto Serif JP", serif;
+        border: none;
+        box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.15);
+        line-height: 1.8;
+      }
+
+      .editor:focus {
+        outline: none;
+        box-shadow: inset 0 0 30px rgba(255, 105, 180, 0.2);
+      }
+
+      .widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #8a2be2;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      .widget:hover {
+        background: #ff69b4;
+        box-shadow: 0 10px 30px rgba(255, 105, 180, 0.5);
+      }
+
+      .media-item {
+        position: relative;
+        margin: 1rem 0;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(147, 112, 219, 0.2);
+      }
+
+      .remove-media {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255, 105, 180, 0.9);
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .remove-media:hover {
+        background: #8a2be2;
+        box-shadow: 0 4px 12px rgba(138, 43, 226, 0.4);
+      }
+
+      .lock-screen-bg {
+        background-image: url("https://images.unsplash.com/photo-1519183071298-a2962feb14f4?w=1920&h=1080&fit=crop");
+        background-size: cover;
+        background-position: center;
+      }
+
+      .sidebar-bg {
+        background: rgba(248, 235, 255, 0.95);
+        border-right: 2px solid rgba(138, 43, 226, 0.3);
+      }
+
+      .main-content-bg {
+        background: rgba(250, 240, 255, 0.9);
+      }
+
+      .toolbar-bg {
+        background: rgba(255, 240, 245, 0.95);
+        border-right: 2px solid rgba(255, 105, 180, 0.3);
+      }
+
+      .calligraphy-font {
+        font-family: "Ma Shan Zheng", cursive;
+      }
+
+      .chinese-font {
+        font-family: "Zcool XiaoWei", sans-serif;
+      }
+
+      .btn-primary {
+        background: #8a2be2;
+        transition: all 0.3s ease;
+        border: none;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+      }
+
+      .btn-primary:hover {
+        background: #ff69b4;
+        box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+      }
+
+      .entry-card {
+        background: rgba(255, 248, 220, 0.9);
+        border: 1px solid rgba(147, 112, 219, 0.2);
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        padding: 1rem;
+        position: relative;
+      }
+
+      .entry-card:hover {
+        background: rgba(230, 230, 250, 0.95);
+        border-color: rgba(255, 105, 180, 0.4);
+        box-shadow: 0 6px 20px rgba(147, 112, 219, 0.2);
+      }
+
+      .delete-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 12px;
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+
+      .entry-card:hover .delete-btn {
+        opacity: 1;
+      }
+
+      .delete-btn:hover {
+        background: #cc0000;
+        transform: scale(1.1);
+      }
+
+      .notification {
+        background: rgba(138, 43, 226, 0.95);
+        border: 1px solid rgba(75, 0, 130, 0.5);
+        animation: slideIn 0.3s ease;
+        border-radius: 8px;
+        color: white;
+        padding: 1rem;
+      }
+
+      .notification.error {
+        background: rgba(255, 68, 68, 0.95);
+        border-color: rgba(204, 0, 0, 0.5);
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .title-input {
+        background: rgba(250, 240, 255, 0.8);
+        border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+        font-family: "Noto Serif JP", serif;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        padding: 0.5rem 0;
+      }
+
+      .title-input:focus {
+        border-bottom-color: #ff69b4;
+        background: rgba(250, 240, 255, 0.95);
+        outline: none;
+      }
+
+      .control-panel {
+        background: rgba(240, 248, 255, 0.95);
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        padding: 1rem;
+        border: 1px solid rgba(176, 196, 222, 0.3);
+      }
+
+      .header {
+        background-image: url("https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=300&fit=crop");
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 1rem;
+        border-radius: 8px 8px 0 0;
+        position: relative;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(138, 43, 226, 0.3);
+        border-radius: 8px 8px 0 0;
+      }
+
+      .header > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .auth-screen {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #8a2be2, #ff69b4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .auth-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .google-btn {
+        background: white;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        color: #3c4043;
+        cursor: pointer;
+        font-size: 14px;
+        height: 40px;
+        letter-spacing: 0.25px;
+        margin: 0 auto;
+        max-width: 400px;
+        position: relative;
+        text-align: center;
+        transition: background-color .218s, border-color .218s, box-shadow .218s;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .google-btn:hover {
+        box-shadow: 0 1px 2px 0 rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15);
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: #e0e0e0;
+        border-radius: 2px;
+        overflow: hidden;
+        margin: 1rem 0;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #8a2be2, #ff69b4);
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Authentication Screen -->
+    <div id="authScreen" class="auth-screen">
+      <div class="auth-card">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">📖 Personal Journal</h1>
+        <p class="text-gray-600 mb-8">Sign in to access your private journal</p>
+        <button id="googleLoginBtn" class="google-btn">
+          <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#4285F4" d="m18 9.2c0-.6-.1-1.2-.2-1.8h-8.8v3.4h5c-.2 1.1-.9 2-1.8 2.6v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.6z"/>
+            <path fill="#34A853" d="m9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.6-1.9.9-3.1.9-2.4 0-4.4-1.6-5.1-3.9h-3v2.3c1.5 3 4.6 5.1 8.1 5.1z"/>
+            <path fill="#FBBC04" d="m3.9 10.7c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2v-2.3h-3c-.6 1.2-.9 2.5-.9 4s.3 2.8.9 4l3-2.3z"/>
+            <path fill="#EA4335" d="m9 3.6c1.3 0 2.5.4 3.4 1.3l2.5-2.5c-1.5-1.4-3.5-2.3-5.9-2.3-3.5 0-6.6 2.1-8.1 5.1l3 2.3c.7-2.3 2.7-3.9 5.1-3.9z"/>
+          </svg>
+          <span id="loginBtnText">Continue with Google</span>
+          <div id="loginSpinner" class="loading hidden"></div>
+        </button>
+        <p class="text-xs text-gray-500 mt-4">Your data is encrypted and stored securely</p>
+      </div>
+    </div>
+
+    <div id="mainApp" class="flex flex-col md:flex-row h-[100vh] hidden">
+      <!-- Header -->
+      <div class="text-3xl header font-bold text-gray-800 p-4 border-b flex justify-between items-center absolute top-0 left-0 right-0 z-10">
+        <div>
+          <span>📖 My Journal</span>
+          <div class="text-sm font-normal text-gray-200 mt-1">
+            Welcome, <span id="userDisplayName">User</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="text-sm font-normal text-gray-200">
+            <span id="totalEntries">0</span> entries
+          </div>
+          <button id="logoutBtn" class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors">
+            Sign Out
+          </button>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="basis-1/4 border-r border-gray-200 toolbar-bg paper-texture mt-20 overflow-y-auto">
+        <div class="flex flex-wrap md:flex-col flex-row gap-2 m-3">
+          <button id="newEntryBtn" class="control-panel rounded-lg p-3 btn-primary text-white text-sm font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+            <span>✨ New Entry</span>
+          </button>
+
+          <div class="control-panel rounded-lg p-3 text-sm flex flex-col gap-2">
+            <span class="font-medium text-amber-900">📝 Font Style</span>
+            <select id="fontSelect" class="border rounded-md p-2 text-xs w-full bg-white">
+              <option value="serif">明朝 - Mincho Serif</option>
+              <option value="sans">ゴシック - Gothic Sans</option>
+              <option value="rounded">丸ゴシック - Rounded Sans</option>
+              <option value="chinese">中国風 - Chinese Style</option>
+              <option value="chinese-sans">中国ゴシック - Chinese Sans</option>
+              <option value="chinese-serif">中国明朝 - Chinese Serif</option>
+              <option value="calligraphy">書道 - Calligraphy</option>
+              <option value="brush">筆文字 - Brush Style</option>
+              <option value="handwriting">手書き - Handwriting</option>
+              <option value="modern">モダン - Modern</option>
+              <option value="minimal">ミニマル - Minimal</option>
+              <option value="mincho">新明朝 - New Mincho</option>
+              <option value="old-style">古風 - Old Style</option>
+              <option value="pop">ポップ - Pop</option>
+              <option value="pixel">ピクセル - Pixel</option>
+              <option value="comic">漫画 - Comic</option>
+              <option value="korean">韓国風 - Korean</option>
+              <option value="korean-serif">韓国明朝 - Korean Serif</option>
+            </select>
+          </div>
+
+          <div class="control-panel rounded-lg p-3 text-sm flex flex-col gap-2">
+            <span class="font-medium text-amber-900">📏 Text Size</span>
+            <select id="sizeSelect" class="border rounded-md p-2 text-xs w-full bg-white">
+              <option value="1">小 - Small (10px)</option>
+              <option value="2">中小 - Medium-Small (13px)</option>
+              <option value="3" selected>中 - Medium (16px)</option>
+              <option value="4">大 - Large (18px)</option>
+              <option value="5">特大 - Extra Large (24px)</option>
+              <option value="6">巨大 - Huge (32px)</option>
+              <option value="7">最大 - Maximum (48px)</option>
+            </select>
+          </div>
+
+          <div class="control-panel rounded-lg p-3 text-sm flex flex-col gap-2">
+            <span class="font-medium text-amber-900">🎨 Text Color</span>
+            <input type="color" id="colorPicker" value="#000000" class="w-full h-8 rounded-md border cursor-pointer" />
+          </div>
+
+          <button id="addPictureBtn" class="control-panel rounded-lg p-3 btn-primary text-white text-sm font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+            <span>🖼️ Add Picture</span>
+          </button>
+
+          <button id="addAudioBtn" class="control-panel rounded-lg p-3 btn-primary text-white text-sm font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+            <span>🎵 Add Audio</span>
+          </button>
+
+          <button id="addVideoBtn" class="control-panel rounded-lg p-3 btn-primary text-white text-sm font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+            <span>🎬 Add Video</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="basis-2/4 p-6 overflow-auto main-content-bg paper-texture mt-20">
+        <div class="h-full">
+          <input type="text" id="entryTitle" placeholder="Entry Title..." class="title-input w-full p-3 mb-4 text-xl font-bold bg-transparent focus:outline-none transition-all duration-300" />
+          <div id="editor" class="editor rounded-lg" contenteditable="true" data-placeholder="Write your thoughts here..."></div>
+          <div id="mediaContainer" class="mt-6"></div>
+          <div class="flex justify-between items-center mt-6">
+            <div id="syncStatus" class="text-sm text-gray-500"></div>
+            <div class="flex gap-2">
+              <button id="saveEntryBtn" class="btn-primary text-white py-2 px-6 rounded-lg text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300">
+                <span id="saveBtnText">💾 Save Entry</span>
+                <div id="saveSpinner" class="loading hidden"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Previous Entries -->
+      <div class="basis-1/4 border-l border-amber-200 overflow-auto sidebar-bg paper-texture mt-20">
+        <div class="font-bold text-xl p-4 font-serif text-amber-900 calligraphy-font border-b border-amber-300">
+          📜 Previous Entries
+        </div>
+        <div id="previousEntries" class="flex flex-col gap-2 m-3"></div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-lg font-bold mb-4">🗑️ Delete Entry</h3>
+        <p class="mb-4">Are you sure you want to permanently delete this entry?</p>
+        <p class="text-sm text-red-600 mb-4">This action cannot be undone.</p>
+        <div class="flex justify-end space-x-3">
+          <button id="cancelDeleteBtn" class="px-4 py-2 text-sm bg-gray-200 rounded-md hover:bg-gray-300">
+            Cancel
+          </button>
+          <button id="confirmDeleteBtn" class="px-4 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center gap-2">
+            <span>Delete Forever</span>
+            <div id="deleteSpinner" class="loading hidden"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Progress -->
+    <div id="uploadProgress" class="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 hidden">
+      <div class="text-sm font-medium mb-2">Uploading media...</div>
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+      <div class="text-xs text-gray-500 mt-1"><span id="uploadPercent">0</span>%</div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js"></script>
+
+    <script type="module">
+      // Firebase Configuration
+      const firebaseConfig = {
+        // REPLACE WITH YOUR FIREBASE CONFIG
+        apiKey: "your-api-key",
+        authDomain: "your-project.firebaseapp.com",
+        projectId: "your-project-id",
+        storageBucket: "your-project.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "your-app-id"
+      };
+
+      // Initialize Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+      const storage = firebase.storage();
+
+      // Application State
+      let currentUser = null;
+      let currentEntryId = null;
+      let deleteEntryId = null;
+
+      // DOM Elements
+      const authScreen = document.getElementById('authScreen');
+      const mainApp = document.getElementById('mainApp');
+      const googleLoginBtn = document.getElementById('googleLoginBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const userDisplayName = document.getElementById('userDisplayName');
+      const editor = document.getElementById('editor');
+      const entryTitle = document.getElementById('entryTitle');
+      const previousEntries = document.getElementById('previousEntries');
+      const saveEntryBtn = document.getElementById('saveEntryBtn');
+      const newEntryBtn = document.getElementById('newEntryBtn');
+      const fontSelect = document.getElementById('fontSelect');
+      const sizeSelect = document.getElementById('sizeSelect');
+      const colorPicker = document.getElementById('colorPicker');
+      const addPictureBtn = document.getElementById('addPictureBtn');
+      const addAudioBtn = document.getElementById('addAudioBtn');
+      const addVideoBtn = document.getElementById('addVideoBtn');
+      const mediaContainer = document.getElementById('mediaContainer');
+      const deleteModal = document.getElementById('deleteModal');
+      const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+      const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+      const totalEntries = document.getElementById('totalEntries');
+      const syncStatus = document.getElementById('syncStatus');
+      const uploadProgress = document.getElementById('uploadProgress');
+      const progressFill = document.getElementById('progressFill');
+      const uploadPercent = document.getElementById('uploadPercent');
+
+      // Authentication
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          currentUser = user;
+          userDisplayName.textContent = user.displayName || user.email;
+          showMainApp();
+          loadEntries();
+        } else {
+          currentUser = null;
+          showAuthScreen();
+        }
+      });
+
+      googleLoginBtn.addEventListener('click', async () => {
+        const loginBtnText = document.getElementById('loginBtnText');
+        const loginSpinner = document.getElementById('loginSpinner');
+        
+        try {
+          loginBtnText.textContent = 'Signing in...';
+          loginSpinner.classList.remove('hidden');
+          googleLoginBtn.disabled = true;
+
+          const provider = new firebase.auth.GoogleAuthProvider();
+          provider.addScope('profile');
+          provider.addScope('email');
+          
+          await auth.signInWithPopup(provider);
+          showNotification('✅ Successfully signed in!', 'success');
+        } catch (error) {
+          console.error('Login error:', error);
+          showNotification(`❌ Sign in failed: ${error.message}`, 'error');
+        } finally {
+          loginBtnText.textContent = 'Continue with Google';
+          loginSpinner.classList.add('hidden');
+          googleLoginBtn.disabled = false;
+        }
+      });
+
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await auth.signOut();
+          showNotification('👋 Signed out successfully', 'success');
+        } catch (error) {
+          showNotification(`❌ Sign out failed: ${error.message}`, 'error');
+        }
+      });
+
+      function showAuthScreen() {
+        authScreen.classList.remove('hidden');
+        mainApp.classList.add('hidden');
+      }
+
+      function showMainApp() {
+        authScreen.classList.add('hidden');
+        mainApp.classList.remove('hidden');
+      }
+
+      // Entry Management
+      async function loadEntries() {
+        if (!currentUser) return;
+
+        try {
+          syncStatus.textContent = 'Loading entries...';
+          
+          const snapshot = await db
+            .collection('entries')
+            .where('userId', '==', currentUser.uid)
+            .orderBy('createdAt', 'desc')
+            .get();
+
+          previousEntries.innerHTML = '';
+          let count = 0;
+
+          snapshot.forEach((doc) => {
+            const entry = { id: doc.id, ...doc.data() };
+            createEntryElement(entry);
+            count++;
+          });
+
+          totalEntries.textContent = count;
+          syncStatus.textContent = count > 0 ? `${count} entries synced` : 'No entries yet';
+        } catch (error) {
+          console.error('Error loading entries:', error);
+          showNotification('❌ Failed to load entries', 'error');
+          syncStatus.textContent = 'Sync failed';
+        }
+      }
+
+      function createEntryElement(entry) {
+        const entryElement = document.createElement('div');
+        entryElement.className = 'entry-card p-3 rounded-lg cursor-pointer text-sm transition-all duration-300';
+        
+        const createdAt = entry.createdAt?.toDate ? entry.createdAt.toDate() : new Date(entry.createdAt);
+        
+        entryElement.innerHTML = `
+          <div class="font-medium text-amber-900">${entry.title || 'Untitled Entry'}</div>
+          <div class="text-xs text-amber-700 mt-1">${formatDate(createdAt)}</div>
+          <div class="text-xs text-gray-600 mt-1">${(entry.content || '')
+            .replace(/<[^>]*>/g, '')
+            .substring(0, 50)}${entry.content && entry.content.length > 50 ? '...' : ''}</div>
+          <button class="delete-btn" title="Delete entry">×</button>
+        `;
+        
+        // Click to load entry
+        entryElement.addEventListener('click', (e) => {
+          if (!e.target.classList.contains('delete-btn')) {
+            loadEntry(entry.id);
+          }
+        });
+        
+        // Delete button
+        entryElement.querySelector('.delete-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          showDeleteModal(entry.id);
+        });
+        
+        previousEntries.appendChild(entryElement);
+      }
+
+      async function loadEntry(id) {
+        if (!currentUser) return;
+
+        try {
+          syncStatus.textContent = 'Loading entry...';
+          
+          const doc = await db.collection('entries').doc(id).get();
+          
+          if (doc.exists && doc.data().userId === currentUser.uid) {
+            const entry = doc.data();
+            currentEntryId = id;
+            entryTitle.value = entry.title || '';
+            editor.innerHTML = entry.content || '';
+            
+            // Load media
+            mediaContainer.innerHTML = '';
+            if (entry.mediaUrls && entry.mediaUrls.length > 0) {
+              for (const mediaUrl of entry.mediaUrls) {
+                await loadMediaFromUrl(mediaUrl);
+              }
+            }
+            
+            handlePlaceholder();
+            syncStatus.textContent = 'Entry loaded';
+          }
+        } catch (error) {
+          console.error('Error loading entry:', error);
+          showNotification('❌ Failed to load entry', 'error');
+          syncStatus.textContent = 'Load failed';
+        }
+      }
+
+      async function saveEntry() {
+        if (!currentUser) return;
+
+        const saveBtnText = document.getElementById('saveBtnText');
+        const saveSpinner = document.getElementById('saveSpinner');
+        
+        try {
+          saveBtnText.textContent = 'Saving...';
+          saveSpinner.classList.remove('hidden');
+          saveEntryBtn.disabled = true;
+          syncStatus.textContent = 'Saving entry...';
+
+          // Upload media files first
+          const mediaUrls = await uploadMediaFiles();
+          
+          const entryData = {
+            title: entryTitle.value || 'Untitled Entry',
+            content: editor.innerHTML,
+            mediaUrls: mediaUrls,
+            userId: currentUser.uid,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          };
+
+          if (currentEntryId) {
+            // Update existing entry
+            await db.collection('entries').doc(currentEntryId).update(entryData);
+          } else {
+            // Create new entry
+            entryData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            const docRef = await db.collection('entries').add(entryData);
+            currentEntryId = docRef.id;
+          }
+
+          await loadEntries();
+          playSuccessSound();
+          showNotification('✅ Entry saved successfully!', 'success');
+          syncStatus.textContent = 'All changes saved';
+        } catch (error) {
+          console.error('Error saving entry:', error);
+          showNotification(`❌ Failed to save entry: ${error.message}`, 'error');
+          syncStatus.textContent = 'Save failed';
+        } finally {
+          saveBtnText.textContent = '💾 Save Entry';
+          saveSpinner.classList.add('hidden');
+          saveEntryBtn.disabled = false;
+        }
+      }
+
+      async function uploadMediaFiles() {
+        const mediaElements = mediaContainer.querySelectorAll('img, audio, video');
+        const mediaUrls = [];
+        
+        for (const mediaElement of mediaElements) {
+          if (mediaElement.src.startsWith('data:')) {
+            // This is a base64 data URL that needs to be uploaded
+            try {
+              const url = await uploadBase64ToStorage(mediaElement.src, mediaElement.tagName.toLowerCase());
+              mediaUrls.push(url);
+            } catch (error) {
+              console.error('Error uploading media:', error);
+              showNotification('⚠️ Some media failed to upload', 'error');
+            }
+          } else if (mediaElement.src.startsWith('https://firebasestorage.googleapis.com')) {
+            // Already uploaded to Firebase
+            mediaUrls.push(mediaElement.src);
+          }
+        }
+        
+        return mediaUrls;
+      }
+
+      async function uploadBase64ToStorage(dataUrl, type) {
+        return new Promise((resolve, reject) => {
+          // Convert data URL to blob
+          const arr = dataUrl.split(',');
+          const mime = arr[0].match(/:(.*?);/)[1];
+          const bstr = atob(arr[1]);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+          }
+          const blob = new Blob([u8arr], { type: mime });
+
+          // Create storage reference
+          const timestamp = Date.now();
+          const fileName = `${type}_${timestamp}_${Math.random().toString(36).substr(2, 9)}`;
+          const storageRef = storage.ref(`users/${currentUser.uid}/media/${fileName}`);
+
+          // Upload with progress tracking
+          const uploadTask = storageRef.put(blob);
+          
+          uploadProgress.classList.remove('hidden');
+          
+          uploadTask.on('state_changed',
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              progressFill.style.width = progress + '%';
+              uploadPercent.textContent = Math.round(progress);
+            },
+            (error) => {
+              uploadProgress.classList.add('hidden');
+              reject(error);
+            },
+            async () => {
+              try {
+                const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                uploadProgress.classList.add('hidden');
+                resolve(downloadURL);
+              } catch (error) {
+                uploadProgress.classList.add('hidden');
+                reject(error);
+              }
+            }
+          );
+        });
+      }
+
+      async function loadMediaFromUrl(url) {
+        try {
+          // Determine media type from URL or metadata
+          const response = await fetch(url, { method: 'HEAD' });
+          const contentType = response.headers.get('content-type');
+          
+          const mediaDiv = document.createElement('div');
+          mediaDiv.className = 'media-item';
+
+          let mediaElement;
+          if (contentType.startsWith('image/')) {
+            mediaElement = document.createElement('img');
+            mediaElement.className = 'max-w-full h-auto rounded-lg shadow-lg';
+            mediaElement.alt = 'Journal image';
+          } else if (contentType.startsWith('audio/')) {
+            mediaElement = document.createElement('audio');
+            mediaElement.controls = true;
+            mediaElement.className = 'w-full';
+            mediaElement.preload = 'metadata';
+          } else if (contentType.startsWith('video/')) {
+            mediaElement = document.createElement('video');
+            mediaElement.controls = true;
+            mediaElement.className = 'w-full max-h-96';
+            mediaElement.preload = 'metadata';
+          }
+
+          if (mediaElement) {
+            mediaElement.src = url;
+            
+            const removeBtn = document.createElement('div');
+            removeBtn.className = 'remove-media';
+            removeBtn.innerHTML = '×';
+            removeBtn.title = 'Remove media';
+            removeBtn.addEventListener('click', function () {
+              mediaDiv.remove();
+            });
+
+            mediaDiv.appendChild(mediaElement);
+            mediaDiv.appendChild(removeBtn);
+            mediaContainer.appendChild(mediaDiv);
+          }
+        } catch (error) {
+          console.error('Error loading media:', error);
+        }
+      }
+
+      function createNewEntry() {
+        currentEntryId = null;
+        entryTitle.value = '';
+        editor.innerHTML = '';
+        mediaContainer.innerHTML = '';
+        handlePlaceholder();
+        editor.focus();
+        syncStatus.textContent = 'New entry';
+      }
+
+      // Delete Entry
+      function showDeleteModal(entryId) {
+        deleteEntryId = entryId;
+        deleteModal.classList.remove('hidden');
+      }
+
+      function hideDeleteModal() {
+        deleteEntryId = null;
+        deleteModal.classList.add('hidden');
+      }
+
+      async function deleteEntry() {
+        if (!deleteEntryId || !currentUser) return;
+
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const deleteSpinner = document.getElementById('deleteSpinner');
+        
+        try {
+          confirmDeleteBtn.disabled = true;
+          deleteSpinner.classList.remove('hidden');
+
+          // Get the entry to find associated media files
+          const doc = await db.collection('entries').doc(deleteEntryId).get();
+          
+          if (doc.exists && doc.data().userId === currentUser.uid) {
+            const entry = doc.data();
+            
+            // Delete associated media files from storage
+            if (entry.mediaUrls && entry.mediaUrls.length > 0) {
+              for (const mediaUrl of entry.mediaUrls) {
+                try {
+                  const storageRef = storage.refFromURL(mediaUrl);
+                  await storageRef.delete();
+                } catch (error) {
+                  console.warn('Failed to delete media file:', error);
+                }
+              }
+            }
+            
+            // Delete the entry document
+            await db.collection('entries').doc(deleteEntryId).delete();
+            
+            // If we're currently viewing this entry, clear the editor
+            if (currentEntryId === deleteEntryId) {
+              createNewEntry();
+            }
+            
+            await loadEntries();
+            showNotification('🗑️ Entry deleted successfully', 'success');
+          }
+        } catch (error) {
+          console.error('Error deleting entry:', error);
+          showNotification(`❌ Failed to delete entry: ${error.message}`, 'error');
+        } finally {
+          confirmDeleteBtn.disabled = false;
+          deleteSpinner.classList.add('hidden');
+          hideDeleteModal();
+        }
+      }
+
+      // Media handling
+      function addMedia(type) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = `${type}/*`;
+
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            // Check file size (10MB limit)
+            if (file.size > 10 * 1024 * 1024) {
+              showNotification('❌ File too large. Maximum size is 10MB.', 'error');
+              return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const mediaDiv = document.createElement('div');
+              mediaDiv.className = 'media-item';
+
+              let mediaElement;
+              if (type === 'image') {
+                mediaElement = document.createElement('img');
+                mediaElement.src = event.target.result;
+                mediaElement.className = 'max-w-full h-auto rounded-lg shadow-lg';
+                mediaElement.alt = 'Journal image';
+              } else if (type === 'audio') {
+                mediaElement = document.createElement('audio');
+                mediaElement.src = event.target.result;
+                mediaElement.controls = true;
+                mediaElement.className = 'w-full';
+                mediaElement.preload = 'metadata';
+              } else if (type === 'video') {
+                mediaElement = document.createElement('video');
+                mediaElement.src = event.target.result;
+                mediaElement.controls = true;
+                mediaElement.className = 'w-full max-h-96';
+                mediaElement.preload = 'metadata';
+              }
+
+              const removeBtn = document.createElement('div');
+              removeBtn.className = 'remove-media';
+              removeBtn.innerHTML = '×';
+              removeBtn.title = 'Remove media';
+              removeBtn.addEventListener('click', function () {
+                mediaDiv.remove();
+              });
+
+              mediaDiv.appendChild(mediaElement);
+              mediaDiv.appendChild(removeBtn);
+              mediaContainer.appendChild(mediaDiv);
+
+              showNotification(
+                `📎 ${type.charAt(0).toUpperCase() + type.slice(1)} added successfully!`,
+                'success'
+              );
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+
+        input.click();
+      }
+
+      // Text formatting
+      function updateFont() {
+        const font = fontSelect.value;
+        let fontFamily;
+
+        switch (font) {
+          case 'serif':
+            fontFamily = "'Noto Serif JP', serif";
+            break;
+          case 'sans':
+            fontFamily = "'Noto Sans JP', sans-serif";
+            break;
+          case 'rounded':
+            fontFamily = "'M PLUS Rounded 1c', sans-serif";
+            break;
+          case 'chinese':
+            fontFamily = "'Zcool XiaoWei', serif";
+            break;
+          case 'chinese-sans':
+            fontFamily = "'Noto Sans SC', sans-serif";
+            break;
+          case 'chinese-serif':
+            fontFamily = "'Noto Serif SC', serif";
+            break;
+          case 'calligraphy':
+            fontFamily = "'Ma Shan Zheng', cursive";
+            break;
+          case 'brush':
+            fontFamily = "'Hina Mincho', serif";
+            break;
+          case 'handwriting':
+            fontFamily = "'Zhi Mang Xing', cursive";
+            break;
+          case 'modern':
+            fontFamily = "'Zen Kaku Gothic New', sans-serif";
+            break;
+          case 'minimal':
+            fontFamily = "'Zen Maru Gothic', sans-serif";
+            break;
+          case 'mincho':
+            fontFamily = "'Shippori Mincho', serif";
+            break;
+          case 'old-style':
+            fontFamily = "'Klee One', cursive";
+            break;
+          case 'pop':
+            fontFamily = "'DotGothic16', sans-serif";
+            break;
+          case 'pixel':
+            fontFamily = "'Press Start 2P', cursive";
+            break;
+          case 'comic':
+            fontFamily = "'Yomogi', cursive";
+            break;
+          case 'korean':
+            fontFamily = "'Noto Sans KR', sans-serif";
+            break;
+          case 'korean-serif':
+            fontFamily = "'Noto Serif KR', serif";
+            break;
+          default:
+            fontFamily = "'Noto Serif JP', serif";
+        }
+        
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0 && !selection.isCollapsed) {
+          document.execCommand('fontName', false, fontFamily);
+        } else {
+          editor.style.fontFamily = fontFamily;
+        }
+      }
+
+      function updateSize() {
+        const size = sizeSelect.value;
+        document.execCommand('fontSize', false, size);
+      }
+
+      function updateColor() {
+        const color = colorPicker.value;
+        document.execCommand('foreColor', false, color);
+      }
+
+      // Placeholder handling
+      function handlePlaceholder() {
+        if (editor.textContent.trim() === '') {
+          editor.innerHTML = '';
+          editor.setAttribute('data-empty', 'true');
+        } else {
+          editor.removeAttribute('data-empty');
+        }
+      }
+
+      // Utility functions
+      function formatDate(date) {
+        return date.toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      }
+
+      function playSuccessSound() {
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+
+          oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.1);
+
+          gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.2);
+        } catch (e) {
+          console.log('Audio not supported');
+        }
+      }
+
+      function showNotification(message, type) {
+        const notification = document.createElement('div');
+        const bgColor = type === 'success' ? 'bg-green-600' : 'bg-red-600';
+        notification.className = `notification fixed top-4 right-4 ${bgColor} text-white px-4 py-3 rounded-lg text-sm font-medium z-50 shadow-xl`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          notification.style.transform = 'translateX(100%)';
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+
+      // Event Listeners
+      saveEntryBtn.addEventListener('click', saveEntry);
+      newEntryBtn.addEventListener('click', createNewEntry);
+      fontSelect.addEventListener('change', updateFont);
+      sizeSelect.addEventListener('change', updateSize);
+      colorPicker.addEventListener('input', updateColor);
+      addPictureBtn.addEventListener('click', () => addMedia('image'));
+      addAudioBtn.addEventListener('click', () => addMedia('audio'));
+      addVideoBtn.addEventListener('click', () => addMedia('video'));
+      cancelDeleteBtn.addEventListener('click', hideDeleteModal);
+      confirmDeleteBtn.addEventListener('click', deleteEntry);
+
+      // Editor event listeners
+      editor.addEventListener('input', handlePlaceholder);
+      editor.addEventListener('focus', function () {
+        if (this.getAttribute('data-empty') === 'true') {
+          this.innerHTML = '';
+          this.removeAttribute('data-empty');
+        }
+      });
+      editor.addEventListener('blur', handlePlaceholder);
+
+      // CSS for placeholder
+      const style = document.createElement('style');
+      style.textContent = `
+        .editor[data-empty="true"]::before {
+          content: attr(data-placeholder);
+          color: #9ca3af;
+          pointer-events: none;
+          position: absolute;
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Initialize placeholder
+      handlePlaceholder();
+    </script>
+  </body>
+</html>
